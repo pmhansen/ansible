@@ -1,0 +1,34 @@
+- hosts: all
+  become: true
+  become_method: su
+
+  tasks:
+  - name: Install packages
+    apt:
+      update_cache: yes
+      state: latest
+      pkg:
+      - sudo
+      - net-tools
+      - bind9-dnsutils
+      - bsd-mailx
+      - build-essential
+      - chrony
+      - mc
+      - nagios-nrpe-server
+      - ntpdate
+      - postfix
+      - rdiff-backup
+      - wget
+
+  - name: Add pmh to group sudo
+    user:
+      name: pmh
+      groups: sudo
+      append: yes
+
+  - name: Copy sudo setup
+    copy:
+      src: 'etc/sudoers.d/nopasswd'
+      dest: '/etc/sudoers.d/nopasswd'
+      mode: 0440

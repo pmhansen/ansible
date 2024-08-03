@@ -1,0 +1,33 @@
+- hosts: all
+  become: true
+
+  tasks:
+  - name: Install packages
+    apt:
+      update_cache: yes
+      state: latest
+      pkg:
+      - apache2
+      - mariadb-server
+      - memcached
+      - nodejs
+      - php-apcu
+      - php-bcmath
+      - php-bz2
+      - php-cli
+      - php-curl
+      - php-fpm
+      - php-gd
+      - php-gmp
+      - php-imagick
+      - php-imap
+      - php-intl
+      - php-ldap
+      - php-mbstring
+      - php-memcache
+      - php-mysql
+      - php-opcache
+      - php-readline
+      - php-xml
+      - php-zip
+      - redis-tools
