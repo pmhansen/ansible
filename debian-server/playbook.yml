@@ -20,6 +20,8 @@
       - postfix
       - rdiff-backup
       - wget
+      - whois
+      - apt-show-versions
 
   - name: Add pmh to group sudo
     user:

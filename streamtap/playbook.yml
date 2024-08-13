@@ -1,0 +1,45 @@
+- hosts: all
+  become: true
+  gather_facts: false
+    
+  tasks:
+  - name: Install packages
+    ansible.builtin.apt:
+      update_cache: yes
+      state: latest
+      pkg:
+      - fbi
+      - mpv
+
+  - name: Make hostname
+    ansible.builtin.set_fact: random_hostname="streamtap-{{ lookup('ansible.builtin.password', '/dev/null', chars=['ascii_lowercase', 'digits'], length=5) }}"
+
+  - name: Execute command to read current hostname
+    ansible.builtin.command: "cat /etc/hostname"
+    register: hostname_output
+
+  - name: Trim the hostname and store it in a variable
+    ansible.builtin.set_fact: current_hostname="{{ hostname_output.stdout.rstrip('\n') }}"
+
+  - name: Write current hostname
+    ansible.builtin.debug:
+      msg: "{{ current_hostname }}"
+
+  - name: Set the generated hostname in /etc/hostname
+    ansible.builtin.copy:
+      content: "{{ random_hostname }}"
+      dest: /etc/hostname
+      owner: root
+      group: root
+      mode: '0644'
+    when: current_hostname[:9] != 'streamtap'
+
+  - name: Ensure the hostname is set correctly in /etc/hosts
+    ansible.builtin.lineinfile:
+      path: /etc/hosts
+      regexp: "^127\\.0\\.1\\.1\\s+.*$"
+      line: "127.0.1.1    {{ random_hostname }}"
+      owner: root
+      group: root
+      mode: '0644'
+    when: current_hostname[:9] != 'streamtap'

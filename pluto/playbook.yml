@@ -50,8 +50,39 @@
     copy:
       src: "etc/ssh/{{ item }}"
       dest: "/etc/ssh/{{ item }}"
-      mode: 0664
+      mode: 0644
     loop:
       - "ssh_host_ecdsa_key.pub"
       - "ssh_host_ed25519_key.pub"
       - "ssh_host_rsa_key.pub"
+
+  - name: Copy network interfaces file
+    copy:
+      src: "etc/network/interfaces"
+      dest: "/etc/network/interfaces"
+      mode: 0644
+
+  - name: Copy network alias-0 file
+    copy:
+      src: "etc/network/interfaces.d/eno1_alias_0"
+      dest: "/etc/network/interfaces.d/eno1_alias_0"
+      mode: 0644
+
+  - name: Copy network alias-1 file
+    copy:
+      src: "etc/network/interfaces.d/eno1_alias_1"
+      dest: "/etc/network/interfaces.d/eno1_alias_1"
+      mode: 0644
+
+  - name: Enable Apache proxy modules
+    command:
+      cmd: a2enmod proxy_fcgi setenvif
+
+  - name: Enable PHP
+    command:
+      cmd: a2enconf php8.2-fpm
+
+  - name: Reload Apache to apply changes
+    ansible.builtin.service:
+      name: apache2
+      state: reloaded
