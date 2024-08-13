@@ -11,17 +11,17 @@
       - fbi
       - mpv
 
-  - name: Make hostname
-    ansible.builtin.set_fact: random_hostname="streamtap-{{ lookup('ansible.builtin.password', '/dev/null', chars=['ascii_lowercase', 'digits'], length=5) }}"
-
-  - name: Execute command to read current hostname
+  - name: Read current hostname
     ansible.builtin.command: "cat /etc/hostname"
     register: hostname_output
 
-  - name: Trim the hostname and store it in a variable
+  - name: Make random hostname
+    ansible.builtin.set_fact: random_hostname="streamtap-{{ lookup('ansible.builtin.password', '/dev/null', chars=['ascii_lowercase', 'digits'], length=5) }}"
+
+  - name: Trim the random hostname and set fact
     ansible.builtin.set_fact: current_hostname="{{ hostname_output.stdout.rstrip('\n') }}"
 
-  - name: Write current hostname
+  - name: "current hostname is:"
     ansible.builtin.debug:
       msg: "{{ current_hostname }}"
 
