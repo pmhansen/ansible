@@ -1,0 +1,19 @@
+- name: Copy ssh private host keys
+  copy:
+    content: "{{ item.content }}"
+    dest: "/etc/ssh/{{ item.name}}"
+    mode: 0600
+  loop:
+    - { name: "ssh_host_ecdsa_key", content:  "{{ ssh.ssh_host_ecdsa_key }}" }
+    - { name: "ssh_host_ed25519_key", content:  "{{ ssh.ssh_host_ed25519_key }}" }
+    - { name: "ssh_host_rsa_key", content:  "{{ ssh.ssh_host_rsa_key }}" }
+
+- name: Copy ssh public host keys
+  copy:
+    src: "etc/ssh/{{ item }}"
+    dest: "/etc/ssh/{{ item }}"
+    mode: 0644
+  loop:
+    - "ssh_host_ecdsa_key.pub"
+    - "ssh_host_ed25519_key.pub"
+    - "ssh_host_rsa_key.pub"

@@ -1,0 +1,36 @@
+- hosts: all
+  name: Run common tasks
+  become: true
+  tasks:
+    - import_role:
+        name: common
+
+- hosts: all
+  gather_facts: false
+  name: Do ssh setup
+  become: true
+  tags:
+    - "ssh"
+  tasks:
+    - import_role:
+        name: ssh
+
+- hosts: all
+  gather_facts: false
+  name: Do network setup
+  become: true
+  tags:
+    - "network"
+  tasks:
+    - import_role:
+        name: network
+
+- hosts: all
+  gather_facts: false
+  name: Do Apache & PHP setup
+  become: true
+  tags:
+    - "apache"
+  tasks:
+    - import_role:
+        name: apache

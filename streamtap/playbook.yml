@@ -10,6 +10,8 @@
       pkg:
       - fbi
       - mpv
+      - imagemagick
+      - socat
 
   - name: Read current hostname
     ansible.builtin.command: "cat /etc/hostname"

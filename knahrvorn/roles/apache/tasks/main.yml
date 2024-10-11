@@ -1,0 +1,12 @@
+- name: Enable Apache proxy modules
+  command:
+    cmd: a2enmod proxy_fcgi setenvif
+
+- name: Enable PHP
+  command:
+    cmd: a2enconf php8.2-fpm
+
+- name: Reload Apache to apply changes
+  ansible.builtin.service:
+    name: apache2
+    state: reloaded

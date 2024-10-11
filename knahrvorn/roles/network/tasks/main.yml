@@ -1,0 +1,17 @@
+- name: Copy network interfaces file
+  copy:
+    src: "etc/network/interfaces"
+    dest: "/etc/network/interfaces"
+    mode: 0644
+
+- name: Copy network alias-0 file
+  copy:
+    src: "etc/network/interfaces.d/eno1_alias_0"
+    dest: "/etc/network/interfaces.d/eno1_alias_0"
+    mode: 0644
+
+- name: Copy network alias-1 file
+  copy:
+    src: "etc/network/interfaces.d/eno1_alias_1"
+    dest: "/etc/network/interfaces.d/eno1_alias_1"
+    mode: 0644
