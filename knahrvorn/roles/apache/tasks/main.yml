@@ -1,3 +1,9 @@
+- name: Add user to www-data group
+  user:
+    name: pmh
+    groups: www-data
+    append: yes
+
 - name: Enable Apache proxy modules
   command:
     cmd: a2enmod proxy_fcgi setenvif
