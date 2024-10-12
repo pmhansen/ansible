@@ -1,4 +1,4 @@
 # The alias network interface for eno1
-auto eno1:0
-iface eno1:0 inet static
+auto eno1:1
+iface eno1:1 inet static
         address 10.10.10.73/24

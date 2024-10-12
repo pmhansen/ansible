@@ -1,0 +1,10 @@
+client {
+  host_network "gateway001" {
+    cidr = "{{ network.ip-alias-0 }}/32"
+  }
+
+  host_network "gateway002" {
+    cidr = "{{ etwork.ip-alias-1 }}/32"
+  }
+
+}

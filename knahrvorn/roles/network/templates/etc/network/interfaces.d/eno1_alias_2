@@ -1,0 +1,4 @@
+# The alias network interface for eno1
+auto eno1:2
+iface eno1:2 inet static
+        address 172.19.10.66/24

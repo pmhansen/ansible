@@ -1,0 +1,128 @@
+# Full configuration options can be found at https://www.nomadproject.io/docs/configuration
+
+data_dir  = "/opt/nomad/data"
+bind_addr = "{{ network.ip }}"
+
+datacenter = "{{ nomad.datacenter }}"
+
+server {
+  # license_path is required as of Nomad v1.1.1+
+  #license_path = "/opt/nomad/license.hclic"
+  enabled          = true
+  bootstrap_expect = 1
+  job_gc_threshold = "24h"
+}
+
+ui {
+  enabled = true
+
+  consul {
+    ui_url = "https://consul.pbnet.dk/ui"
+  }
+}
+
+telemetry {
+  collection_interval = "1s"
+  disable_hostname = true
+  prometheus_metrics = true
+  publish_allocation_metrics = true
+  publish_node_metrics = true 
+}
+
+plugin "docker" {
+  config {
+    extra_labels = ["job_name", "task_group_name", "task_name", "namespace", "node_name"]
+
+    gc {
+      image = true
+      image_delay = "1h"
+    }
+    volumes {
+      enabled = true
+    }
+  }
+}
+
+client {
+  enabled = true
+  servers = ["{{ network.ip }}"]
+
+  host_volume "docker-socket" {
+    path = "/var/run/docker.sock"
+    read_only = true
+  }
+  
+  host_volume "birth" {
+    path      = "/mnt/sdb1/volumes/nomad/birth"
+    read_only = false
+  }
+  
+  host_volume "dragonfly" {
+    path      = "/mnt/sdb1/volumes/nomad/dragonfly"
+    read_only = false
+  }
+
+  host_volume "flexsignal" {
+    path      = "/mnt/sdb1/volumes/nomad/flexsignal"
+    read_only = false
+  }
+
+  host_volume "flexsignal-mqtt-samples" {
+    path      = "/mnt/sdb1/volumes/nomad/flexsignal-mqtt-samples"
+    read_only = false
+  }
+
+  host_volume "mosquitto" {
+    path      = "/mnt/sdb1/volumes/nomad/mosquitto"
+    read_only = false
+  }
+
+  host_volume "loki" {
+    path      = "/mnt/sdb1/volumes/nomad/loki"
+    read_only = false
+  }
+
+  host_volume "pgdata-api" {
+    path      = "/mnt/sdb1/volumes/nomad/pgdata/api"
+    read_only = false
+  }
+  
+  host_volume "pgdata-event" {
+    path      = "/mnt/sdb1/volumes/nomad/pgdata/event"
+    read_only = false
+  }
+  
+  host_volume "pgdata-nominatim" {
+    path      = "/mnt/sdb1/volumes/nomad/pgdata/nominatim"
+    read_only = false
+  }
+
+  host_volume "pgdata-payment" {
+    path      = "/mnt/sdb1/volumes/nomad/pgdata/payment"
+    read_only = false
+  }
+  
+  host_volume "pgdata-status" {
+    path      = "/mnt/sdb1/volumes/nomad/pgdata/status"
+    read_only = false
+  }
+
+  host_volume "pgdata-storage" {
+    path      = "/mnt/sdb1/volumes/nomad/pgdata/storage"
+    read_only = false
+  }
+  
+  host_volume "pgdata-techlog" {
+    path      = "/mnt/sdb1/volumes/nomad/pgdata/techlog"
+    read_only = false
+  }
+  
+  host_volume "rabbitmq" {
+    path      = "/mnt/sdb1/volumes/nomad/rabbitmq"
+    read_only = false
+  }
+  
+  options {
+        "docker.cleanup.image" = "false"
+  }
+}

@@ -1,0 +1,88 @@
+- name: Get Hashicorp GPG key
+  get_url:
+    url: https://apt.releases.hashicorp.com/gpg
+    dest: /tmp/hashicorp.gpg
+
+- name: Convert GPG key to GPG keyring format
+  command: gpg --batch --yes --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg /tmp/hashicorp.gpg
+
+- name: Add Hashicorp Nomad repository
+  apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com {{ ansible_distribution_release }} main"
+    filename: hashicorp
+
+- name: Install Consul & Nomad
+  apt:
+    state: latest
+    pkg: 
+    - consul
+    - consul-template
+    - nomad
+
+- name: Create directories for nomad volumes
+  file:
+    path: "/mnt/sdb1/volumes/nomad/{{ item }}"
+    state: directory
+    owner: root
+    group: docker
+    mode: "42775"
+  loop:
+    - birth
+    - dragonfly
+    - flexsignal
+    - flexsignal-mqtt-samples
+    - mosquitto
+    - loki
+    - pgdata/api
+    - pgdata/event
+    - pgdata/nominatim
+    - pgdata/payment
+    - pgdata/status
+    - pgdata/storage
+    - pgdata/techlog
+    - rabbitmq
+
+- name: Making Consul configuration
+  template:
+    src: "etc/consul.d/consul.hcl.j2"
+    dest: "/etc/consul.d/consul.hcl"
+    mode: 0644
+
+- name: Making Nomad configuration
+  template:
+    src: "etc/nomad.d/nomad.hcl.j2"
+    dest: "/etc/nomad.d/nomad.hcl"
+    mode: 0644
+
+- name: Start Consul service
+  systemd_service:
+    name: consul
+    state: started
+    enabled: true
+
+- name: Start Nomad service
+  systemd_service:
+    name: nomad
+    state: started
+    enabled: true
+
+- name: Install Systemd-resolved
+  apt:
+    state: latest
+    pkg: 
+    - systemd-resolved
+
+- name: Ensure systemd-resolved config dir
+  file:
+    path: /etc/systemd/resolved.conf.d
+    state: directory
+
+- name: Making systemd-resolved configuration
+  copy:
+    src: etc/systemd/resolved.conf.d/consul.conf
+    dest: /etc/systemd/resolved.conf.d/consul.conf
+
+- name: Restart systemd-resolved service
+  systemd_service:
+    name: systemd-resolved
+    state: restarted

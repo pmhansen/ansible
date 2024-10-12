@@ -34,3 +34,23 @@
   tasks:
     - import_role:
         name: apache
+
+- hosts: all
+  gather_facts: false
+  name: Do Docker setup
+  become: true
+  tags:
+    - "docker"
+  tasks:
+    - import_role:
+        name: docker
+
+- hosts: all
+  gather_facts: false
+  name: Do Consul & Nomad setup
+  become: true
+  tags:
+    - "nomad"
+  tasks:
+    - import_role:
+        name: nomad
