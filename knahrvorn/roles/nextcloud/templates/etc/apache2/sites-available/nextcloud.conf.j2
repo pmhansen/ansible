@@ -1,0 +1,20 @@
+<VirtualHost *:80>
+    ServerName {{ nextcloud.sitename }}
+    DocumentRoot /var/www/nextcloud/
+
+    # log files
+    ErrorLog /var/log/apache2/{{ nextcloud.sitename }}-error.log
+    CustomLog /var/log/apache2/{{ nextcloud.sitename }}-access.log combined
+
+    <Directory /var/www/nextcloud/>
+        Options +FollowSymlinks
+        AllowOverride All
+
+        <IfModule mod_dav.c>
+            Dav off
+        </IfModule>
+
+        SetEnv HOME /var/www/nextcloud
+        SetEnv HTTP_HOME /var/www/nextcloud
+    </Directory>
+</VirtualHost>

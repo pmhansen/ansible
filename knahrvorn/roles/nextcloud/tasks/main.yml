@@ -26,3 +26,29 @@
 
 - name: Set file permissions to 644
   command: find /var/www/nextcloud -type f -exec chmod 644 {} +
+
+- name: Making Nextcloud Apache configuration
+  template:
+    src: "etc/apache2/sites-available/nextcloud.conf.j2"
+    dest: "/etc/apache2/sites-available/nextcloud.conf"
+    mode: 0644
+
+- name: Adding PHP configuration parameters
+  copy:
+    src: "etc/php/8.2/fpm/conf.d/90-nextcloud.ini"
+    dest: "/etc/php/8.2/fpm/conf.d/90-nextcloud.ini"
+    mode: 0644
+
+- name: Enable Nextcloud Apache site
+  command:
+    cmd: a2ensite nextcloud
+
+- name: Restart php-fpm service
+  systemd_service:
+    name: php8.2-fpm
+    state: restarted
+
+- name: Restart Apache service
+  systemd_service:
+    name: apache2
+    state: restarted
