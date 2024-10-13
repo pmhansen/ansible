@@ -18,6 +18,7 @@
     - apt-show-versions
     - apache2
     - mariadb-server
+    - python3-pymysql
     - memcached
     - nodejs
     - php-apcu
@@ -33,12 +34,15 @@
     - php-intl
     - php-ldap
     - php-mbstring
-    - php-memcache
+    - php-redis
+    - php-memcached
     - php-mysql
     - php-opcache
     - php-readline
     - php-xml
+    - php-json
     - php-zip
+    - php-pear
     - redis-tools
 
 - name: Copy sudo setup

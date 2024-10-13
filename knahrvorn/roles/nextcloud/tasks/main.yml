@@ -52,3 +52,28 @@
   systemd_service:
     name: apache2
     state: restarted
+
+- name: Making Nextcloud Apache configuration
+  template:
+    src: "etc/apache2/sites-available/nextcloud.conf.j2"
+    dest: "/etc/apache2/sites-available/nextcloud.conf"
+    mode: 0644
+
+- name: Making MariaDB configuration template
+  template:
+    src: "tmp/mysql.sql.j2"
+    dest: "/tmp/mysql.sql"
+
+- name: Check if MariaDB root password is already set
+  mysql_user:
+    name: root
+    check_implicit_admin: yes
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+  register: mysql_root_check
+  ignore_errors: true
+  changed_when: false
+
+- name: Execute MariaDB configuration template
+  shell: mysql --socket=/var/run/mysqld/mysqld.sock mysql < /tmp/mysql.sql
+  when: not mysql_root_check.failed
+  become: true
