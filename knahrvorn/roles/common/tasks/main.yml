@@ -44,9 +44,16 @@
     - php-zip
     - php-pear
     - redis-tools
+    - certbot
 
 - name: Copy sudo setup
   copy:
     src: 'etc/sudoers.d/nopasswd'
     dest: '/etc/sudoers.d/nopasswd'
     mode: 0440
+
+- name: Copy renew cert script
+  copy:
+    src: 'root/renew_cert.sh'
+    dest: '/root/renew_cert.sh'
+    mode: 0755
