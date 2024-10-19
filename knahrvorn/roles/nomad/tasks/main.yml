@@ -21,7 +21,7 @@
 
 - name: Create directories for nomad volumes
   file:
-    path: "/mnt/sdb1/volumes/nomad/{{ item }}"
+    path: "/export/volumes/nomad/{{ item }}"
     state: directory
     owner: root
     group: docker
@@ -52,6 +52,12 @@
   template:
     src: "etc/nomad.d/nomad.hcl.j2"
     dest: "/etc/nomad.d/nomad.hcl"
+    mode: 0644
+
+- name: Making Nomad network configuration
+  template:
+    src: "etc/nomad.d/gateway.hcl.j2"
+    dest: "/etc/nomad.d/gateway.hcl"
     mode: 0644
 
 - name: Start Consul service

@@ -45,6 +45,7 @@
     - php-pear
     - redis-tools
     - certbot
+    - coturn
 
 - name: Copy sudo setup
   copy:

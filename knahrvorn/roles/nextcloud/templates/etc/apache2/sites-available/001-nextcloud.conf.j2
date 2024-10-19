@@ -1,4 +1,4 @@
-<VirtualHost *:80>
+<VirtualHost 127.0.0.1:80 {{ network.ip_alias_1 }}:80>
     ServerName {{ nextcloud.sitename }}
     DocumentRoot /var/www/nextcloud/
 

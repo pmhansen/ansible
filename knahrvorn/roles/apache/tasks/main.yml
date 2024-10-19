@@ -12,6 +12,26 @@
   command:
     cmd: a2enconf php8.2-fpm
 
+- name: Remove "Listen 80" from ports.conf
+  lineinfile:
+    path: /etc/apache2/ports.conf
+    regexp: "^Listen 80"
+    state: absent
+
+- name: Ensure Listen localhost is present
+  lineinfile:
+    path: /etc/apache2/ports.conf
+    regexp: "^Listen 127.0.0.1:80"
+    line: "Listen 127.0.0.1:80"
+    state: present
+
+- name: Ensure Listen alias:0 is present
+  lineinfile:
+    path: /etc/apache2/ports.conf
+    regexp: "^Listen {{ network.ip_alias_1 }}:80"
+    line: "Listen {{ network.ip_alias_1 }}:80"
+    state: present
+
 - name: Reload Apache to apply changes
   ansible.builtin.service:
     name: apache2

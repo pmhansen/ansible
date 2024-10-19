@@ -21,3 +21,11 @@
     src: "etc/network/interfaces.d/eno1_alias_2"
     dest: "/etc/network/interfaces.d/eno1_alias_2"
     mode: 0644
+
+- name: Ensure hosts file entries
+  blockinfile:
+    path: /etc/hosts
+    block: |
+      10.10.10.72     knahrvorn-eno1-0
+      10.10.10.73     knahrvorn-eno1-1
+      10.10.10.80     knahrvorn-eno1 knahrvorn knahrvorn.c4a.local knahrvorn.pbnet.dk nomad.pbnet.dk nextcloud.pbnet.dk hub.flexdevel.com birth.flexdevel.com knahrvorn-eno1

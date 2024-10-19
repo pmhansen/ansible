@@ -32,3 +32,15 @@
     name: pmh
     groups: docker
     append: yes
+
+- name: Docker dns configuration
+  copy:
+    src: "etc/docker/daemon.json"
+    dest: "/etc/docker/daemon.json"
+    mode: 0644
+
+- name: Restart Docker to apply changes
+  ansible.builtin.service:
+    name: docker
+    state: restarted
+

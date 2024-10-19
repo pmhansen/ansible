@@ -1,22 +1,22 @@
-- name: Download Nextcloud archive
-  get_url:
-    url: https://github.com/nextcloud/server/archive/refs/tags/v29.0.3.tar.gz
-    dest: /tmp/nextcloud-v29.0.3.tar.gz
+# - name: Download Nextcloud archive
+#   get_url:
+#     url: https://github.com/nextcloud/server/archive/refs/tags/v29.0.3.tar.gz
+#     dest: /tmp/nextcloud-v29.0.3.tar.gz
 
-- name: Create target directory for Nextcloud
-  file:
-    path: /var/www/nextcloud
-    state: directory
-    owner: www-data
-    group: www-data
-    mode: '0750'
+# - name: Create target directory for Nextcloud
+#   file:
+#     path: /var/www/nextcloud
+#     state: directory
+#     owner: www-data
+#     group: www-data
+#     mode: '0750'
 
-- name: Extract Nextcloud archive
-  ansible.builtin.unarchive:
-    src: /tmp/nextcloud-v29.0.3.tar.gz
-    dest: /var/www/nextcloud
-    remote_src: yes
-    extra_opts: ['--strip-components=1']
+# - name: Extract Nextcloud archive
+#   ansible.builtin.unarchive:
+#     src: /tmp/nextcloud-v29.0.3.tar.gz
+#     dest: /var/www/nextcloud
+#     remote_src: yes
+#     extra_opts: ['--strip-components=1']
 
 - name: Set ownership for all files and directories in Nextcloud
   command: chown -R www-data:www-data /var/www/nextcloud
@@ -27,37 +27,35 @@
 - name: Set file permissions to 644
   command: find /var/www/nextcloud -type f -exec chmod 644 {} +
 
-- name: Making Nextcloud Apache configuration
-  template:
-    src: "etc/apache2/sites-available/nextcloud.conf.j2"
-    dest: "/etc/apache2/sites-available/nextcloud.conf"
-    mode: 0644
-
 - name: Adding PHP configuration parameters
   copy:
     src: "etc/php/8.2/fpm/conf.d/90-nextcloud.ini"
     dest: "/etc/php/8.2/fpm/conf.d/90-nextcloud.ini"
     mode: 0644
 
-- name: Enable Nextcloud Apache site
-  command:
-    cmd: a2ensite nextcloud
-
 - name: Restart php-fpm service
   systemd_service:
     name: php8.2-fpm
     state: restarted
 
+- name: Disable default site
+  command:
+    cmd: a2dissite 000-default
+
+- name: Making Nextcloud Apache configuration
+  template:
+    src: "etc/apache2/sites-available/001-nextcloud.conf.j2"
+    dest: "/etc/apache2/sites-available/001-nextcloud.conf"
+    mode: 0644
+
+- name: Enable Nextcloud Apache site
+  command:
+    cmd: a2ensite 001-nextcloud
+
 - name: Restart Apache service
   systemd_service:
     name: apache2
     state: restarted
-
-- name: Making Nextcloud Apache configuration
-  template:
-    src: "etc/apache2/sites-available/nextcloud.conf.j2"
-    dest: "/etc/apache2/sites-available/nextcloud.conf"
-    mode: 0644
 
 - name: Making MariaDB configuration template
   template:
@@ -77,3 +75,9 @@
   shell: mysql --socket=/var/run/mysqld/mysqld.sock mysql < /tmp/mysql.sql
   when: not mysql_root_check.failed
   become: true
+
+- name: Making cuTURN configuration
+  template:
+    src: "etc/turnserver.conf.j2"
+    dest: "/etc/turnserver.conf"
+    mode: 0644
