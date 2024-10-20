@@ -27,10 +27,7 @@
     group: docker
     mode: "42775"
   loop:
-    - birth
     - dragonfly
-    - flexsignal
-    - flexsignal-mqtt-samples
     - mosquitto
     - loki
     - pgdata/api
@@ -41,6 +38,18 @@
     - pgdata/storage
     - pgdata/techlog
     - rabbitmq
+
+- name: Set directory user permission
+  file:
+    path: "/export/volumes/nomad/{{ item }}"
+    state: directory
+    owner: nobody
+    group: docker
+    mode: "42775"
+  loop:
+    - birth
+    - flexsignal
+    - flexsignal-mqtt-samples
 
 - name: Making Consul configuration
   template:
