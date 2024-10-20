@@ -1,0 +1,21 @@
+#
+# /etc/systemd/system/tiddlywiki.service
+# sudo systemctl start tiddlywiki
+# sudo systemctl enable tiddlywiki
+#
+
+[Unit]
+Description=TiddlyWiki
+After=syslog.target
+
+[Service]
+SyslogIdentifier=tiddlywiki
+Restart=always
+User=nobody
+Group=nogroup
+StandardOutput=syslog
+EnvironmentFile=/etc/tiddlywiki.conf
+ExecStart=/usr/local/bin/tiddlywiki $WIKI --server $PORT $ROOT_TIDDLER $ROOT_RENDER_TYPE $ROOT_SERVE_TYPE $WIKI_USERNAME $WIKI_PASSWORD
+
+[Install]
+WantedBy=multi-user.target

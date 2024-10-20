@@ -1,0 +1,30 @@
+- name: Install TiddlyWiki
+  npm:
+    name: tiddlywiki
+    global: yes
+
+- name: Make TiddlyWiki configuration
+  template:
+    src: etc/tiddlywiki.conf
+    dest: /etc/tiddlywiki.conf
+
+- name: Make TiddlyWiki systemd service file
+  copy:
+    src: etc/systemd/system/tiddlywiki.service
+    dest: /etc/systemd/system/tiddlywiki.service
+    owner: root
+    group: root
+
+- name: Ensure wiki path
+  file:
+    path: /mnt/nas1/tiddlywiki
+    state: directory
+    owner: nobody
+    group: nogroup
+
+- name: Enable and start TiddlyWiki Service
+  systemd_service:
+    state: started
+    name: tiddlywiki
+    daemon_reload: true
+    enabled: true

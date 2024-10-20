@@ -21,6 +21,7 @@
     - python3-pymysql
     - memcached
     - nodejs
+    - npm
     - php-apcu
     - php-bcmath
     - php-bz2

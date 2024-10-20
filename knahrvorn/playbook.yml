@@ -66,3 +66,13 @@
   tasks:
     - import_role:
         name: nextcloud
+
+- hosts: all
+  gather_facts: false
+  name: Do TiddlyWiki setup
+  become: true
+  tags:
+    - "tiddlywiki"
+  tasks:
+    - import_role:
+        name: tiddlywiki
