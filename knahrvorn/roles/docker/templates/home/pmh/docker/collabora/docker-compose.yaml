@@ -1,0 +1,10 @@
+services:
+  registry:
+    restart: always
+    image: collabora/code:latest
+    container_name: collabora
+    ports:
+      - 9980:9980
+    environment:
+      - domain=nextcloud.pbnet.dk
+      - extra_params=--o:ssl.enable=false --o:ssl.termination=true

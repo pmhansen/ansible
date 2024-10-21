@@ -1,0 +1,32 @@
+services:
+  web:
+    image: nginx
+    container_name: dstar4all_web
+    ports:
+      - 3011:80
+    volumes:
+      - /export/volumes/docker/dstar4all/html:/usr/share/nginx/html:ro
+    restart: unless-stopped
+    networks:
+      - dstar4all
+
+  openssh-server:
+    image: lscr.io/linuxserver/openssh-server:latest
+    container_name: dstar4all_openssh
+    environment:
+      - PUID=65534
+      - PGID=65534
+      - PASSWORD_ACCESS=true
+      - USER_PASSWORD={{ dstar4all.password }}
+      - USER_NAME={{ dstar4all.username }}
+    ports:
+      - 2222:2222
+    volumes:
+      - /export/volumes/docker/dstar4all:/config
+    restart: unless-stopped
+    networks:
+      - dstar4all
+
+networks:
+  dstar4all:
+    name: dstar4all

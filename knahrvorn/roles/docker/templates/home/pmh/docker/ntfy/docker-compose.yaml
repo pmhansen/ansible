@@ -1,0 +1,10 @@
+services:
+  registry:
+    restart: always
+    image: binwiederhier/ntfy:latest
+    command: ["serve"]
+    container_name: ntfy
+    ports:
+      - 8080:80
+    volumes:
+      - /export/volumes/docker/ntfy:/var/lib/ntfy

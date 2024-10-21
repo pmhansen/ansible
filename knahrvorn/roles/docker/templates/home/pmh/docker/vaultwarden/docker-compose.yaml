@@ -1,0 +1,12 @@
+services:
+  registry:
+    restart: always
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    ports:
+      - 3012:80
+    environment:
+      - ADMIN_TOKEN={{ vaultwarden.admin_token }}
+      - SIGNUPS_DOMAINS_WHITELIST=pbnet.dk,btnet.dk
+    volumes:
+      - /export/volumes/docker/vaultwarden:/data

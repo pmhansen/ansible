@@ -1,0 +1,137 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: redeem_postgresql
+    environment:
+      POSTGRES_INITDB_ARGS: --locale=da_DK.UTF-8
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - ${POSTGRESQL_DATA}
+      - ${POSTGRESQL_INIT}
+    restart: always
+    ports:
+      - "5433:5432"
+    logging:
+      driver: journald
+    networks:
+      - redeem
+
+  email:
+    image: hub.flexdevel.com:5000/flexsignal_email
+    container_name: redeem_flexsignal_email
+    environment:
+      API_ADDR: 0.0.0.0:13001
+      PPROF_ADDR: 0.0.0.0:16014
+      METRICS_ADDR: 0.0.0.0:19930
+      REDIS_ENABLE: 1
+      REDIS_URL: redis://redis:6379/0
+      SMTP_SERVER: ${SMTP_SERVER}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USERNAME: ${SMTP_USERNAME}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+      DEFAULT_SENDER: support@itservices.nu
+      DEFAULT_SENDER_NAME: IT Services
+      VERBOSE: ${VERBOSE}
+    restart: always
+    logging:
+      driver: journald
+    depends_on:
+      - redis
+    networks:
+      - redeem
+
+  payment:
+    image: hub.flexdevel.com:5000/flexsignal_payment
+    container_name: redeem_flexsignal_payment
+    environment:
+      RPC_ADDR: 0.0.0.0:19094
+      PPROF_ADDR: 0.0.0.0:16017
+      METRICS_ADDR: 0.0.0.0:19933
+      SRV_PGSQL_NAME: ""
+      PGSQL_URL: postgres://${DB_USERNAME}:${DB_PASSWORD}@db:5432/${DB_NAME}?sslmode=disable&connect_timeout=10&search_path=public
+      SRV_REDIS_NAME: ""
+      REDIS_URL: redis://redis:6379/0
+      EMAIL_SENDER_NAME: IT Services
+      EMAIL_SENDER: support@itservices.nu
+      FREEPAY_API_KEY: ${FREEPAY_API_KEY}
+      FREEPAY_CALLBACK_URL: ${FREEPAY_CALLBACK_URL}
+      ORDER_PREFIX: ${ORDER_PREFIX}
+      RECEIPT_PREFIX: ${RECEIPT_PREFIX}
+      R2_BUCKET: redeem
+      R2_ACCOUNT_ID: ${R2_ACCOUNT_ID}
+      R2_ACCESS_KEY_ID: ${R2_ACCESS_KEY_ID}
+      R2_ACCESS_KEY_SECRET: ${R2_ACCESS_KEY_SECRET}
+      SCHEDULES_DISABLE: 1
+      VERBOSE: ${VERBOSE}
+    restart: always
+    ports:
+      - "19094:19094"
+    logging:
+      driver: journald
+    depends_on:
+      - db
+      - redis
+    networks:
+      - redeem
+
+  redis:
+    image: redis:7
+    container_name: redeem_redis
+    volumes:
+      - ${REDIS_CONF}
+      - ${REDIS_DATA}
+    restart: always
+    ports:
+      - "6380:6379"
+    logging:
+      driver: journald
+    networks:
+      - redeem
+
+  web:
+    image: hub.flexdevel.com:5000/redeem:${REDEEM_IMAGE_TAG}
+    user: "www-data:www-data"
+    container_name: redeem_web
+    environment:
+      REDEEM: 1
+      MODE: ${MODE}
+      PAYMENT_TESTMODE: ${PAYMENT_TESTMODE}
+      FREEPAY_API_KEY: ${FREEPAY_API_KEY}
+      DB_HOST: db
+      DB_NAME: ${DB_NAME}
+      DB_PORT: 5432
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      SMTP_SERVER: ${SMTP_SERVER}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USERNAME: ${SMTP_USERNAME}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+      SMTP_FROM_ADDRESS: support@itservices.nu
+      SMTP_FROM_NAME: IT Services
+      SMTP_REPLYTO: support@itservices.nu
+      SITE_URL: ${SITE_URL}
+      CARE1_API: ${CARE1_API}
+      CARE1_USERNAME: ${CARE1_USERNAME}
+      CARE1_PASSWORD: ${CARE1_PASSWORD}
+    volumes:
+      - ${SESSION_DIR}
+    restart: always
+    ports:
+      - "3080:80"
+    logging:
+      driver: journald
+    depends_on:
+      - db
+    networks:
+      - redeem
+
+networks:
+  redeem:
+    name: redeem
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.10.0/24
