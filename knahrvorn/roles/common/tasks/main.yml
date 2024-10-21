@@ -7,6 +7,12 @@
     - bind9-dnsutils
     - bsd-mailx
     - build-essential
+    - pkg-config
+    - libicu-dev
+    - bison
+    - flex
+    - libreadline-dev
+    - libz-dev
     - chrony
     - mc
     - nagios-nrpe-server
@@ -47,6 +53,8 @@
     - redis-tools
     - certbot
     - coturn
+    - nfs-common
+
 
 - name: Copy sudo setup
   copy:
@@ -59,3 +67,16 @@
     src: 'root/renew_cert.sh'
     dest: '/root/renew_cert.sh'
     mode: 0755
+
+- name: Ensure NAS mountpoint
+  file:
+    path: "/mnt/nas1"
+    state: directory
+    owner: root
+    group: root
+  
+- name: Add NAS fstab entry
+  blockinfile:
+    path: /etc/fstab
+    block: |
+      #10.100.1.1:/mnt/tank/balder /mnt/nas1 nfs defaults 0 0
