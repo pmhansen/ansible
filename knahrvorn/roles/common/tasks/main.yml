@@ -3,6 +3,7 @@
     update_cache: yes
     state: latest
     pkg:
+    - unattended-upgrades
     - net-tools
     - bind9-dnsutils
     - bsd-mailx
@@ -54,7 +55,26 @@
     - certbot
     - coturn
     - nfs-common
+    - vim
+    - aha
+    - mutt
 
+- name: Copy unattended-upgrades configuration
+  copy:
+    src: 'etc/apt/apt.conf.d/50unattended-upgrades'
+    dest: '/etc/apt/apt.conf.d/50unattended-upgrades'
+
+- name: Copy nagios-nrpe configuration
+  copy:
+    src: 'etc/nagios/nrpe_local.cfg'
+    dest: '/etc/nagios/nrpe_local.cfg'
+  register: nrpe_config
+
+- name: Restart nagios-nrpe-server
+  systemd:
+    name: nagios-nrpe-server
+    state: reloaded
+  when: nrpe_config.changed
 
 - name: Copy sudo setup
   copy:
@@ -80,3 +100,108 @@
     path: /etc/fstab
     block: |
       #10.100.1.1:/mnt/tank/balder /mnt/nas1 nfs defaults 0 0
+
+- name: Add alias to /etc/aliases
+  lineinfile:
+    path: /etc/aliases
+    regexp: '^root:'
+    line: 'root: ph@pbnet.dk'
+    state: present
+  register: postfix_alias
+
+- name: Run newaliases to update the alias database
+  command: newaliases
+
+- name: Copy mailname file
+  copy:
+    src: etc/mailname
+    dest: /etc/mailname
+  register: postfix_mailname
+
+- name: Copy Postfix configuration
+  copy:
+    src: etc/postfix/main.cf
+    dest: /etc/postfix/main.cf
+  register: postfix_conf
+
+- name: Copy Postfix relay_sender
+  copy:
+    src: 'etc/postfix/relay_sender'
+    dest: '/etc/postfix/relay_sender'
+  register: postfix_sender
+
+- name: Copy Postfix relay_auth
+  template:
+    src: 'etc/postfix/relay_auth'
+    dest: '/etc/postfix/relay_auth'
+    mode: 0600
+  register: postfix_auth
+
+- name: Making postmap databases
+  command: postmap {{ item }}
+  loop: 
+    - '/etc/postfix/relay_sender'
+    - '/etc/postfix/relay_auth'
+  when: postfix_sender.changed or postfix_auth.changed
+
+- name: Reload Postfix service
+  service:
+    name: postfix
+    state: reloaded
+  when: > 
+    postfix_alias.changed or 
+    postfix_mailname.changed or 
+    postfix_conf.changed or 
+    postfix_auth.changed or 
+    postfix_sender.changed
+
+- name: Ensure scripts directory
+  file:
+    path: /home/pmh/scripts
+    state: directory
+    owner: pmh
+    group: pmh
+
+- name: Copy PostgreSQL backup scripts
+  template:
+    src: home/pmh/scripts/{{ item }}.j2
+    dest: /home/pmh/scripts/{{ item }}
+    mode: 0740
+    owner: pmh
+    group: pmh
+  loop:
+    - balder_postgresql_backup.sh
+    - sync_balder_to_nas2.sh
+    - update_docker_registry.sh
+
+- name: PostgreSQL backup cronjob
+  cron:
+    name: PostgreSQL backup
+    user: pmh
+    minute: "50"
+    hour: "*/6"
+    job: "/home/pmh/scripts/balder_postgresql_backup.sh"
+ 
+- name: Sync to nas2 cronjob
+  cron:
+    name: Sync to nas2
+    user: pmh
+    minute: "0"
+    hour: "22"
+    job: "/home/pmh/scripts/sync_balder_to_nas2.sh"
+
+- name: Update Docker registry cronjob
+  cron:
+    name: Update Docker registry
+    user: pmh
+    minute: "5"
+    hour: "1"
+    job: "/home/pmh/scripts/update_docker_registry.sh"
+
+- name: Set MAILTO for pmh crontab
+  cron:
+    name: MAILTO
+    user: pmh
+    job: ph@pbnet.dk
+    env: yes
+  

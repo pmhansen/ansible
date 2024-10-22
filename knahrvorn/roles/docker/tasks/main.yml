@@ -42,7 +42,7 @@
   register: docker_result
 
 - name: Restart Docker to apply changes
-  ansible.builtin.service:
+  service:
     name: docker
     state: restarted
   when: docker_result.changed

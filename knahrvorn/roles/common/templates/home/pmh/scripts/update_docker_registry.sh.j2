@@ -1,0 +1,4 @@
+#!/bin/bash
+
+cd /home/pmh/docker/registry
+./update-deployment.sh 2>&1 | tr '\r' '\n' | aha -b | /usr/bin/mutt -s 'update docker registry' -e 'set content_type=text/html' ph@pbnet.dk

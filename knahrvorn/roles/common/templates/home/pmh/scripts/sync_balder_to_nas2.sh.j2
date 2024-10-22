@@ -1,0 +1,126 @@
+#!/bin/bash
+
+function _time {
+    echo $(date +%H.%M.%S)
+}
+
+# Power on the backup server.
+curl -s -X POST '{{ scripts.backup_url }}' -d 'mac_address={{ scripts.mac }}'
+exit_code=$?
+if [ $exit_code -ne 0 ]; then
+    echo "Calling server wakeup failed: $exit_code"
+    exit 1
+fi
+
+# Check if the server is available
+for i in {1..5}
+do
+    result=$(sudo -S -E ssh -n -o ConnectTimeout=3 {{ scripts.backup_user }} -p 22 >/dev/null 2>&1 && echo 1 || echo 0)
+    if [ "$result" -eq 1 ]; then
+        break
+    fi 
+    sleep 90
+done
+
+# All attempts to wakeup server failed
+if [ "$result" -ne 1 ]; then
+    echo "Backup server is not ready, bailing out."
+    exit 1
+fi
+
+echo -e "\nMySQL backup $(_time) ..."
+sudo mkdir -p /usr/local/mysqlbackup
+sudo mysqldump nextcloud |sudo tee /usr/local/mysqlbackup/nextcloud.sql >/dev/null
+sudo -S -E rdiff-backup /usr/local/mysqlbackup \
+    ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/mysqlbackup
+sudo -S -E rdiff-backup --remove-older-than 20B \
+    ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/mysqlbackup
+
+echo -e "\netc backup $(_time) ..."
+sudo -S -E rdiff-backup /etc \
+    ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/etc
+sudo -S -E rdiff-backup --remove-older-than 20B \
+    ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/etc
+
+echo -e "\nhome backup $(_time) ..."
+sudo -S -E rdiff-backup /home \
+    ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/home
+sudo -S -E rdiff-backup --remove-older-than 20B \
+    ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/home
+
+echo -e "\nwww backup $(_time) "
+sudo -S -E rdiff-backup /var/www \
+    ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/www
+sudo -S -E rdiff-backup --remove-older-than 20B \
+    ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/www
+
+echo -e "\nsdb backup $(_time) ..."
+sudo -S -E rdiff-backup /mnt/sdb1 \
+    ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/sdb1
+sudo -S -E rdiff-backup --remove-older-than 20B \
+    ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/sdb1
+
+echo -e "\nnas1 backup $(_time) ..."
+sudo -S -E rdiff-backup --exclude /mnt/nas1/plex --exclude /mnt/nas1/tmp /mnt/nas1 \
+    ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/nas1
+sudo -S -E rdiff-backup --remove-older-than 20B \
+    ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/nas1
+
+echo -e "\nList MySQL increments $(_time) ..."
+sudo -S -E rdiff-backup --list-increments ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/mysqlbackup
+
+echo -e "\nList etc increments $(_time) ..."
+sudo -S -E rdiff-backup --list-increments ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/etc
+
+echo -e "\nList home increments $(_time) ..."
+sudo -S -E rdiff-backup --list-increments ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/home
+
+echo -e "\nList www increments $(_time) ..."
+sudo -S -E rdiff-backup --list-increments ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/www
+
+echo -e "\nList sdb1 increments $(_time) ..."
+sudo -S -E rdiff-backup --list-increments ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/sdb1
+
+echo -e "\nList nas1 increments $(_time) ..."
+sudo -S -E rdiff-backup --list-increments ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/nas1
+
+echo
+echo "anime backup $(_time) ..."
+sudo -S -E rsync --delete --keep-dirlinks -avz -e \
+    ssh --progress "/mnt/nas1/plex/anime/" \
+    nas2.pbnet.dk:/mnt/vol1/balder/anime
+
+echo
+echo "children backup $(_time) ..."
+sudo -S -E rsync --delete --keep-dirlinks -avz -e \
+    ssh --progress "/mnt/nas1/plex/children/" \
+    nas2.pbnet.dk:/mnt/vol1/balder/children
+
+echo
+echo "documentaries backup $(_time) ..."
+sudo -S -E rsync --delete --keep-dirlinks -avz -e \
+    ssh --progress "/mnt/nas1/plex/documentaries/" \
+    nas2.pbnet.dk:/mnt/vol1/balder/documentaries
+
+echo
+echo "movies backup $(_time) ..."
+sudo -S -E rsync --delete --keep-dirlinks -avz -e \
+    ssh --progress "/mnt/nas1/plex/movies/" \
+    nas2.pbnet.dk:/mnt/vol1/balder/movies
+
+echo
+echo "music backup $(_time) ..."
+sudo -S -E rsync --delete --keep-dirlinks -avz -e \
+    ssh --progress "/mnt/nas1/plex/music/" \
+    nas2.pbnet.dk:/mnt/vol1/balder/music
+
+echo
+echo "series backup $(_time) ..."
+sudo -S -E rsync --delete --keep-dirlinks -avz -e \
+    ssh --progress "/mnt/nas1/plex/series/" \
+    nas2.pbnet.dk:/mnt/vol1/balder/series
+
+# Shutdown backup server
+sudo -S -E ssh {{ scripts.backup_user }} -p 22 "shutdown -h now"
+
+echo -e "\nFinished at:  $(_time)"

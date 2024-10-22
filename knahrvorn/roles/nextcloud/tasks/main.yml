@@ -1,22 +1,30 @@
-# - name: Download Nextcloud archive
-#   get_url:
-#     url: https://github.com/nextcloud/server/archive/refs/tags/v29.0.3.tar.gz
-#     dest: /tmp/nextcloud-v29.0.3.tar.gz
+- name: Create target directory for Nextcloud
+  file:
+    path: /var/www/nextcloud
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: '0750'
 
-# - name: Create target directory for Nextcloud
-#   file:
-#     path: /var/www/nextcloud
-#     state: directory
-#     owner: www-data
-#     group: www-data
-#     mode: '0750'
+- name: Check for files in nextcloud folder
+  command: "sh -c 'ls -A /var/www/nextcloud | head -n 1'"
+  register: nextcloud_found_files
+  ignore_errors: true
+  changed_when: false
 
-# - name: Extract Nextcloud archive
-#   ansible.builtin.unarchive:
-#     src: /tmp/nextcloud-v29.0.3.tar.gz
-#     dest: /var/www/nextcloud
-#     remote_src: yes
-#     extra_opts: ['--strip-components=1']
+- name: Download Nextcloud archive
+  get_url:
+    url: https://github.com/nextcloud/server/archive/refs/tags/v29.0.3.tar.gz
+    dest: /tmp/nextcloud-v29.0.3.tar.gz
+  when: nextcloud_found_files.stdout == ""
+
+- name: Extract Nextcloud archive
+  unarchive:
+    src: /tmp/nextcloud-v29.0.3.tar.gz
+    dest: /var/www/nextcloud
+    remote_src: yes
+    extra_opts: ['--strip-components=1']
+  when: nextcloud_found_files.stdout == ""
 
 - name: Set ownership for all files and directories in Nextcloud
   command: chown -R www-data:www-data /var/www/nextcloud
