@@ -32,6 +32,20 @@
     line: "Listen {{ network.ip_alias_1 }}:80"
     state: present
 
+- name: Making Knahrvorn Apache configuration
+  template:
+    src: "etc/apache2/sites-available/000-knahrvorn.conf.j2"
+    dest: "/etc/apache2/sites-available/000-knahrvorn.conf"
+    mode: 0644
+
+- name: Disable default site
+  command:
+    cmd: a2dissite 000-default
+
+- name: Enable Knahrvorn Apache site
+  command:
+    cmd: a2ensite 000-knahrvorn
+
 - name: Reload Apache to apply changes
   ansible.builtin.service:
     name: apache2

@@ -46,10 +46,6 @@
     name: php8.2-fpm
     state: restarted
 
-- name: Disable default site
-  command:
-    cmd: a2dissite 000-default
-
 - name: Making Nextcloud Apache configuration
   template:
     src: "etc/apache2/sites-available/001-nextcloud.conf.j2"

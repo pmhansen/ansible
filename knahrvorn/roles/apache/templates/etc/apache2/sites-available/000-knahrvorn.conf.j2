@@ -1,0 +1,20 @@
+<VirtualHost 127.0.0.1:80 {{ network.ip_alias_1 }}:80>
+    ServerName knahrvorn.pbnet.dk
+    DocumentRoot /var/www/html/
+
+    # log files
+    ErrorLog /var/log/apache2/error.log
+    CustomLog /var/log/apache2access.log combined
+
+    <Directory /var/www/html/>
+        Options +FollowSymlinks
+        AllowOverride All
+
+        <IfModule mod_dav.c>
+            Dav off
+        </IfModule>
+
+        SetEnv HOME /var/www/html
+        SetEnv HTTP_HOME /var/www/html
+    </Directory>
+</VirtualHost>

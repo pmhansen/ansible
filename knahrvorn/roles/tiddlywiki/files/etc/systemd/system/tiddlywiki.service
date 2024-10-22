@@ -15,7 +15,13 @@ User=nobody
 Group=nogroup
 StandardOutput=syslog
 EnvironmentFile=/etc/tiddlywiki.conf
-ExecStart=/usr/local/bin/tiddlywiki $WIKI --server $PORT $ROOT_TIDDLER $ROOT_RENDER_TYPE $ROOT_SERVE_TYPE $WIKI_USERNAME $WIKI_PASSWORD
+ExecStart=/usr/local/bin/tiddlywiki $WIKI --listen port=${PORT} \
+    host=${HOST} \
+    root-tiddler=${TIDDLER} \
+    render-type=${ROOT_RENDER_TYPE} \
+    serve-type=${ROOT_SERVE_TYPE} \
+    username=${WIKI_USERNAME} \
+    password=${WIKI_PASSWORD}
 
 [Install]
 WantedBy=multi-user.target
