@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BACKUP_PATH=/mnt/nas1/balder/postgresql
+BACKUP_PATH=/mnt/nas1/knahrvorn/postgresql
 sudo mkdir -p $BACKUP_PATH
 
 alias pg_basebackup=~/postgresql/pgsql-17.0/bin/pg_basebackup
@@ -13,22 +13,22 @@ if [ $? -ne 0 ]; then
     echo "pg_dumpall redeem failed"
 fi
 
-PGPASSWORD={{ scripts.flexsignal_password }} pg_dumpall -U flexsignal -h balder-eno1 -p 15433 | sudo tee $BACKUP_PATH/flexsignal-api.dump >/dev/null
+PGPASSWORD={{ scripts.flexsignal_password }} pg_dumpall -U flexsignal -h knahrvorn-eno1 -p 15433 | sudo tee $BACKUP_PATH/flexsignal-api.dump >/dev/null
 if [ $? -ne 0 ]; then
     echo "pg_dumpall flexsignal-api failed"
 fi
 
-PGPASSWORD={{ scripts.flexsignal_password }} pg_dumpall -U flexsignal -h balder-eno1 -p 15434 | sudo tee $BACKUP_PATH/flexsignal-status.dump >/dev/null
+PGPASSWORD={{ scripts.flexsignal_password }} pg_dumpall -U flexsignal -h knahrvorn-eno1 -p 15434 | sudo tee $BACKUP_PATH/flexsignal-status.dump >/dev/null
 if [ $? -ne 0 ]; then
     echo "pg_dumpall flexsignal-status failed"
 fi
 
-PGPASSWORD={{ scripts.flexsignal_password }} pg_dumpall -U flexsignal -h balder-eno1 -p 15437 | sudo tee $BACKUP_PATH/flexsignal-event.dump >/dev/null
+PGPASSWORD={{ scripts.flexsignal_password }} pg_dumpall -U flexsignal -h knahrvorn-eno1 -p 15437 | sudo tee $BACKUP_PATH/flexsignal-event.dump >/dev/null
 if [ $? -ne 0 ]; then
     echo "pg_dumpall flexsignal-event failed"
 fi
 
-PGPASSWORD={{ scripts.flexsignal_password }} pg_dumpall -U flexsignal -h balder-eno1 -p 15438 | sudo tee $BACKUP_PATH/flexsignal-payment.dump >/dev/null
+PGPASSWORD={{ scripts.flexsignal_password }} pg_dumpall -U flexsignal -h knahrvorn-eno1 -p 15438 | sudo tee $BACKUP_PATH/flexsignal-payment.dump >/dev/null
 if [ $? -ne 0 ]; then
     echo "pg_dumpall flexsignal-payment failed"
 fi
@@ -36,7 +36,7 @@ fi
 sudo rm -rf $BACKUP_PATH/flexsignal-storage
 sudo mkdir -p $BACKUP_PATH/flexsignal-storage
 sudo chown pmh $BACKUP_PATH/flexsignal-storage
-PGPASSWORD={{ scripts.flexsignal_password }} pg_basebackup -U flexsignal -h balder-eno1 -p 15435 -D $BACKUP_PATH/flexsignal-storage
+PGPASSWORD={{ scripts.flexsignal_password }} pg_basebackup -U flexsignal -h knahrvorn-eno1 -p 15435 -D $BACKUP_PATH/flexsignal-storage
 if [ $? -ne 0 ]; then
     echo "pg_basebackup flexsignal-storage failed"
 fi

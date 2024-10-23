@@ -196,8 +196,8 @@ network:
     ip: 10.10.10.80
     ip_alias_0: 10.10.10.72
     ip_alias_1: 10.10.10.73
-    gateway: 172.19.10.1
-    dns: 172.19.10.1
+    gateway: 10.10.10.3
+    dns: 10.10.10.3
     dns_search: c4a.local
 
 nomad:

@@ -109,3 +109,9 @@
     - vaultwarden
     - collabora
     - ntfy
+
+- name: Set sysctl kernel parameter
+  sysctl:
+    name: vm.overcommit_memory
+    value: '1'
+    sysctl_set: yes

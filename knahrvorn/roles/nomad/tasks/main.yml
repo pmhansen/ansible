@@ -21,23 +21,24 @@
 
 - name: Create directories for nomad volumes
   file:
-    path: "/export/volumes/nomad/{{ item }}"
+    path: "{{ item }}"
     state: directory
     owner: root
     group: docker
     mode: "42775"
   loop:
-    - dragonfly
-    - mosquitto
-    - loki
-    - pgdata/api
-    - pgdata/event
-    - pgdata/nominatim
-    - pgdata/payment
-    - pgdata/status
-    - pgdata/storage
-    - pgdata/techlog
-    - rabbitmq
+    - /export/volumes/nomad/dragonfly
+    - /export/volumes/nomad/mosquitto
+    - /export/volumes/nomad/loki
+    - /export/volumes/nomad/pgdata/api
+    - /export/volumes/nomad/pgdata/event
+    - /export/volumes/nomad/pgdata/nominatim
+    - /export/volumes/nomad/pgdata/payment
+    - /export/volumes/nomad/pgdata/status
+    - /export/volumes/nomad/pgdata/storage
+    - /export/volumes/nomad/pgdata/techlog
+    - /export/volumes/nomad/rabbitmq
+    - /mnt/nas1/volumes/nomad/nominatim
 
 - name: Set directory user permission
   file:

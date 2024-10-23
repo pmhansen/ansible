@@ -16,12 +16,6 @@
     dest: "/etc/network/interfaces.d/eno1_alias_1"
     mode: 0644
 
-- name: Copy network alias-2 file
-  template:
-    src: "etc/network/interfaces.d/eno1_alias_2"
-    dest: "/etc/network/interfaces.d/eno1_alias_2"
-    mode: 0644
-
 - name: Ensure hosts file entries
   blockinfile:
     path: /etc/hosts

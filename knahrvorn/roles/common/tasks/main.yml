@@ -17,6 +17,7 @@
     - chrony
     - mc
     - nagios-nrpe-server
+    - monitoring-plugins
     - ntpdate
     - postfix
     - rdiff-backup
@@ -58,6 +59,7 @@
     - vim
     - aha
     - mutt
+    - screen
 
 - name: Copy unattended-upgrades configuration
   copy:
@@ -99,7 +101,7 @@
   blockinfile:
     path: /etc/fstab
     block: |
-      #10.100.1.1:/mnt/tank/balder /mnt/nas1 nfs defaults 0 0
+      10.100.1.1:/mnt/tank/balder /mnt/nas1 nfs defaults 0 0
 
 - name: Add alias to /etc/aliases
   lineinfile:

@@ -85,3 +85,10 @@
     src: "etc/turnserver.conf.j2"
     dest: "/etc/turnserver.conf"
     mode: 0644
+
+- name: Setting up Nextcloud background job
+  cron:
+    name: Nextcloud background job
+    user: www-data
+    minute: "*/5"
+    job: "php -f /var/www/nextcloud/cron.php --define apc.enable_cli=1"
