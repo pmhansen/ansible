@@ -15,7 +15,10 @@ fi
 # Check if the server is available
 for i in {1..5}
 do
-    result=$(sudo -S -E ssh -n -o ConnectTimeout=3 {{ scripts.backup_user }} -p 22 >/dev/null 2>&1 && echo 1 || echo 0)
+    result=$(sudo -S -E ssh -n \
+        -o ConnectTimeout=3 \
+        -o StrictHostKeyChecking=accept-new \
+        {{ scripts.backup_user }} -p 22 >/dev/null 2>&1 && echo 1 || echo 0)
     if [ "$result" -eq 1 ]; then
         break
     fi 
@@ -30,7 +33,7 @@ fi
 
 echo -e "\nMySQL backup $(_time) ..."
 sudo mkdir -p /usr/local/mysqlbackup
-sudo mysqldump nextcloud |sudo tee /usr/local/mysqlbackup/nextcloud.sql >/dev/null
+sudo mysqldump -u root nextcloud |sudo tee /usr/local/mysqlbackup/nextcloud.sql >/dev/null
 sudo -S -E rdiff-backup /usr/local/mysqlbackup \
     ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/mysqlbackup
 sudo -S -E rdiff-backup --remove-older-than 20B \
@@ -54,14 +57,14 @@ sudo -S -E rdiff-backup /var/www \
 sudo -S -E rdiff-backup --remove-older-than 20B \
     ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/www
 
-echo -e "\nsdb backup $(_time) ..."
-sudo -S -E rdiff-backup /mnt/sdb1 \
-    ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/sdb1
+echo -e "\nexport backup $(_time) ..."
+sudo -S -E rdiff-backup /export \
+    ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/export
 sudo -S -E rdiff-backup --remove-older-than 20B \
-    ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/sdb1
+    ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/export
 
 echo -e "\nnas1 backup $(_time) ..."
-sudo -S -E rdiff-backup --exclude /mnt/nas1/plex --exclude /mnt/nas1/tmp /mnt/nas1 \
+sudo -S -E rdiff-backup --exclude /mnt/nas1/plex --exclude /mnt/nas1/tmp --exclude /mnt/nas1/volumes /mnt/nas1 \
     ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/nas1
 sudo -S -E rdiff-backup --remove-older-than 20B \
     ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/nas1
@@ -78,8 +81,8 @@ sudo -S -E rdiff-backup --list-increments ssh://{{ scripts.backup_user }}::/mnt/
 echo -e "\nList www increments $(_time) ..."
 sudo -S -E rdiff-backup --list-increments ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/www
 
-echo -e "\nList sdb1 increments $(_time) ..."
-sudo -S -E rdiff-backup --list-increments ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/sdb1
+echo -e "\nList export increments $(_time) ..."
+sudo -S -E rdiff-backup --list-increments ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/export
 
 echo -e "\nList nas1 increments $(_time) ..."
 sudo -S -E rdiff-backup --list-increments ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/nas1

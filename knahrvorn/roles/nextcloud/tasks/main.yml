@@ -80,6 +80,12 @@
   when: not mysql_root_check.failed
   become: true
 
+- name: Copy my.cnf file
+  template:
+    src: root/.my.cnf
+    dest: /root/.my.cnf
+    mode: 0600
+
 - name: Making cuTURN configuration
   template:
     src: "etc/turnserver.conf.j2"

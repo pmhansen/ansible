@@ -207,3 +207,21 @@
     job: ph@pbnet.dk
     env: yes
   
+- name: Run certbot renew for root crontab
+  cron:
+    name: Run certbot renew
+    user: root
+    minute: "5"
+    hour: "0"
+    job: "/root/renew_cert.sh"
+
+- name: Copy nas2 ssh key
+  copy:
+    dest: /root/.ssh/id_rsa
+    content: "{{ ssh.nas2_key }}"
+    mode: 0600
+
+- name: Copy nas2 ssh pub key
+  copy:
+    dest: /root/.ssh/id_rsa.pub
+    content: "{{ ssh.nas2_pub }}"
