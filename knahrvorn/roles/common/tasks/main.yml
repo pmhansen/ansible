@@ -52,6 +52,8 @@
     - php-json
     - php-zip
     - php-pear
+    - libmagickcore-6.q16-6-extra
+    - redis-server
     - redis-tools
     - certbot
     - python3-certbot-dns-cloudflare
@@ -61,6 +63,7 @@
     - aha
     - mutt
     - screen
+    - links2
 
 - name: Copy unattended-upgrades configuration
   copy:
