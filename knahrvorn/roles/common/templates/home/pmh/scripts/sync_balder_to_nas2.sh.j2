@@ -34,37 +34,39 @@ fi
 echo -e "\nMySQL backup $(_time) ..."
 sudo mkdir -p /usr/local/mysqlbackup
 sudo mysqldump -u root nextcloud |sudo tee /usr/local/mysqlbackup/nextcloud.sql >/dev/null
-sudo -S -E rdiff-backup /usr/local/mysqlbackup \
+
+sudo -S -E rdiff-backup --api-version 200 backup --print-statistics /usr/local/mysqlbackup \
     ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/mysqlbackup
 sudo -S -E rdiff-backup --remove-older-than 20B \
     ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/mysqlbackup
 
 echo -e "\netc backup $(_time) ..."
-sudo -S -E rdiff-backup /etc \
+sudo -S -E rdiff-backup --api-version 200 backup --print-statistics /etc \
     ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/etc
 sudo -S -E rdiff-backup --remove-older-than 20B \
     ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/etc
 
 echo -e "\nhome backup $(_time) ..."
-sudo -S -E rdiff-backup /home \
+sudo -S -E rdiff-backup --api-version 200 backup --print-statistics /home \
     ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/home
 sudo -S -E rdiff-backup --remove-older-than 20B \
     ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/home
 
 echo -e "\nwww backup $(_time) "
-sudo -S -E rdiff-backup /var/www \
+sudo -S -E rdiff-backup --api-version 200 backup --print-statistics /var/www \
     ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/www
 sudo -S -E rdiff-backup --remove-older-than 20B \
     ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/www
 
 echo -e "\nexport backup $(_time) ..."
-sudo -S -E rdiff-backup /export \
+sudo -S -E rdiff-backup --api-version 200 backup --print-statistics /export \
     ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/export
 sudo -S -E rdiff-backup --remove-older-than 20B \
     ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/export
 
 echo -e "\nnas1 backup $(_time) ..."
-sudo -S -E rdiff-backup --exclude /mnt/nas1/plex --exclude /mnt/nas1/tmp --exclude /mnt/nas1/volumes /mnt/nas1 \
+sudo -S -E rdiff-backup --api-version 200 backup --print-statistics \
+    --exclude /mnt/nas1/plex --exclude /mnt/nas1/tmp --exclude /mnt/nas1/volumes /mnt/nas1 \
     ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/nas1
 sudo -S -E rdiff-backup --remove-older-than 20B \
     ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/nas1

@@ -49,21 +49,24 @@
 
 - name: Create directories for docker volumes
   file:
-    path: "/export/volumes/docker/{{ item }}"
+    path: "/export/volumes/docker/{{ item.path }}"
     state: directory
-    owner: root
-    group: docker
-    mode: "42775"
+    owner: "{{ item.owner | default('root') }}"
+    group: "{{ item.group | default('docker') }}"
+    mode: "{{ item.mode | default('42775') }}"
   loop:
-    - redeem/pgdata
-    - redeem/redis/conf
-    - redeem/session
-    - dstar4all/html
-    - registry/auth
-    - registry/certs
-    - registry/data
-    - vaultwarden
-    - ntfy
+    - path: redeem/pgdata
+    - path: redeem/redis/conf
+    - path: redeem/session
+      owner: www-data
+      group: www-data
+      mode: '0700'
+    - path: dstar4all/html
+    - path: registry/auth
+    - path: registry/certs
+    - path: registry/data
+    - path: vaultwarden
+    - path: ntfy
 
 - name: Ensure folders for docker compose scripts
   file:

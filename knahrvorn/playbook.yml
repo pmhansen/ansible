@@ -38,7 +38,6 @@
         name: apache
 
 - hosts: all
-  gather_facts: false
   name: Do Docker setup
   become: true
   tags:
@@ -48,7 +47,6 @@
         name: docker
 
 - hosts: all
-  gather_facts: false
   name: Do Consul & Nomad setup
   become: true
   tags:
