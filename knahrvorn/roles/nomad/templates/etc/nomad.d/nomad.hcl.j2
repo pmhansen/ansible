@@ -10,7 +10,8 @@ server {
   #license_path = "/opt/nomad/license.hclic"
   enabled          = true
   bootstrap_expect = 1
-  job_gc_threshold = "24h"
+  job_gc_interval = "1h"
+  job_gc_threshold = "72h"
 }
 
 ui {
@@ -35,7 +36,7 @@ plugin "docker" {
 
     gc {
       image = true
-      image_delay = "1h"
+      image_delay = "72h"
     }
     volumes {
       enabled = true
@@ -46,6 +47,12 @@ plugin "docker" {
 client {
   enabled = true
   servers = ["{{ network.ip }}"]
+
+  // Only do GC every 3 days
+  gc_interval = "72h"
+
+  // Each client can have a max of 20 dead allocations, before they are cleaned up.
+  gc_max_allocs = "20"
 
   host_volume "docker-socket" {
     path = "/var/run/docker.sock"
