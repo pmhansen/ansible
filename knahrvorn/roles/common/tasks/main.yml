@@ -54,6 +54,7 @@
     - php-pear
     - redis-tools
     - certbot
+    - python3-certbot-dns-cloudflare
     - coturn
     - nfs-common
     - vim
@@ -207,6 +208,20 @@
     job: ph@pbnet.dk
     env: yes
   
+- name: Ensure .secrets directory
+  file:
+    path: "/root/.secrets"
+    state: directory
+    owner: root
+    group: root
+    mode: 0700
+
+- name: Copy Cloudflare API token
+  template:
+    src: root/.secrets/cloudflare.ini
+    dest: /root/.secrets/cloudflare.ini
+    mode: 0400
+
 - name: Run certbot renew for root crontab
   cron:
     name: Run certbot renew

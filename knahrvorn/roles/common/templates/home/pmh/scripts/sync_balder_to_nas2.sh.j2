@@ -71,6 +71,13 @@ sudo -S -E rdiff-backup --api-version 200 backup --print-statistics \
 sudo -S -E rdiff-backup --remove-older-than 20B \
     ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/nas1
 
+echo -e "\nplexmediaserver backup $(_time) ..."
+sudo -S -E rdiff-backup --api-version 200 backup --print-statistics \
+    "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server" \
+    ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/plexmediaserver
+sudo -S -E rdiff-backup --remove-older-than 20B \
+    ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/plexmediaserver
+
 echo -e "\nList MySQL increments $(_time) ..."
 sudo -S -E rdiff-backup --list-increments ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/mysqlbackup
 
