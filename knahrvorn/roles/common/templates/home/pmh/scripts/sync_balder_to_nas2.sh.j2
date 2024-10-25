@@ -35,69 +35,69 @@ echo -e "\nMySQL backup $(_time) ..."
 sudo mkdir -p /usr/local/mysqlbackup
 sudo mysqldump -u root nextcloud |sudo tee /usr/local/mysqlbackup/nextcloud.sql >/dev/null
 
-sudo -S -E rdiff-backup --force --api-version 200 backup --print-statistics /usr/local/mysqlbackup \
+sudo -S -E rdiff-backup --api-version 201 --force backup --print-statistics /usr/local/mysqlbackup \
     ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/mysqlbackup
-sudo -S -E rdiff-backup --remove-older-than 20B \
+sudo -S -E rdiff-backup --api-version 201 remove increments --older-than 20B \
     ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/mysqlbackup
 
 echo -e "\netc backup $(_time) ..."
-sudo -S -E rdiff-backup --force --api-version 200 backup --print-statistics /etc \
+sudo -S -E rdiff-backup --api-version 201 --force backup --print-statistics /etc \
     ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/etc
-sudo -S -E rdiff-backup --remove-older-than 20B \
+sudo -S -E rdiff-backup --api-version 201 remove increments --older-than 20B \
     ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/etc
 
 echo -e "\nhome backup $(_time) ..."
-sudo -S -E rdiff-backup --force --api-version 200 backup --print-statistics /home \
+sudo -S -E rdiff-backup --api-version 201 --force backup --print-statistics /home \
     ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/home
-sudo -S -E rdiff-backup --remove-older-than 20B \
+sudo -S -E rdiff-backup --api-version 201 remove increments --older-than 20B \
     ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/home
 
 echo -e "\nwww backup $(_time) "
-sudo -S -E rdiff-backup --force --api-version 200 backup --print-statistics /var/www \
+sudo -S -E rdiff-backup --api-version 201 --force backup --print-statistics /var/www \
     ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/www
-sudo -S -E rdiff-backup --remove-older-than 20B \
+sudo -S -E rdiff-backup --api-version 201 remove increments --older-than 20B \
     ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/www
 
 echo -e "\nexport backup $(_time) ..."
-sudo -S -E rdiff-backup --force --api-version 200 backup --print-statistics /export \
+sudo -S -E rdiff-backup --api-version 201 --force backup --print-statistics /export \
     ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/export
-sudo -S -E rdiff-backup --remove-older-than 20B \
+sudo -S -E rdiff-backup --api-version 201 remove increments --older-than 20B \
     ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/export
 
 echo -e "\nnas1 backup $(_time) ..."
-sudo -S -E rdiff-backup --force --api-version 200 backup --print-statistics \
+sudo -S -E rdiff-backup --api-version 201 --force backup --print-statistics \
     --exclude /mnt/nas1/plex --exclude /mnt/nas1/tmp --exclude /mnt/nas1/volumes /mnt/nas1 \
     ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/nas1
-sudo -S -E rdiff-backup --remove-older-than 20B \
+sudo -S -E rdiff-backup --api-version 201 remove increments --older-than 20B \
     ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/nas1
 
 echo -e "\nplexmediaserver backup $(_time) ..."
-sudo -S -E rdiff-backup --force --api-version 200 backup --print-statistics \
+sudo -S -E rdiff-backup --api-version 201 --force backup --print-statistics \
     "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server" \
     ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/plexmediaserver
-sudo -S -E rdiff-backup --remove-older-than 20B \
+sudo -S -E rdiff-backup --api-version 201 remove increments --older-than 20B \
     ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/plexmediaserver
 
 echo -e "\nList MySQL increments $(_time) ..."
-sudo -S -E rdiff-backup --list-increments ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/mysqlbackup
+sudo -S -E rdiff-backup --api-version 201 list increments ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/mysqlbackup
 
 echo -e "\nList etc increments $(_time) ..."
-sudo -S -E rdiff-backup --list-increments ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/etc
+sudo -S -E rdiff-backup --api-version 201 list increments ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/etc
 
 echo -e "\nList home increments $(_time) ..."
-sudo -S -E rdiff-backup --list-increments ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/home
+sudo -S -E rdiff-backup --api-version 201 list increments ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/home
 
 echo -e "\nList www increments $(_time) ..."
-sudo -S -E rdiff-backup --list-increments ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/www
+sudo -S -E rdiff-backup --api-version 201 list increments ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/www
 
 echo -e "\nList export increments $(_time) ..."
-sudo -S -E rdiff-backup --list-increments ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/export
+sudo -S -E rdiff-backup --api-version 201 list increments ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/export
 
 echo -e "\nList nas1 increments $(_time) ..."
-sudo -S -E rdiff-backup --list-increments ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/nas1
+sudo -S -E rdiff-backup --api-version 201 list increments ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/nas1
 
 echo -e "\nList plexmediaserver increments $(_time) ..."
-sudo -S -E rdiff-backup --list-increments ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/plexmediaserver
+sudo -S -E rdiff-backup --api-version 201 list increments ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/plexmediaserver
 
 echo
 echo "anime backup $(_time) ..."
