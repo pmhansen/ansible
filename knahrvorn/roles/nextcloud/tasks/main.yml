@@ -86,6 +86,12 @@
     dest: /root/.my.cnf
     mode: 0600
 
+- name: Copy MariaDB Nextcloud settings
+  copy:
+    src: etc/mysql/conf.d/nextcloud.cnf
+    dest: /etc/mysql/conf.d/nextcloud.cnf
+    mode: 0644
+
 - name: Making cuTURN configuration
   template:
     src: "etc/turnserver.conf.j2"
