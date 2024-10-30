@@ -32,6 +32,17 @@
     line: "Listen {{ network.ip_alias_1 }}:80"
     state: present
 
+- name: Copy custom configuration
+  copy:
+    src: etc/apache2/conf-available/knahrvorn.conf
+    dest: /etc/apache2/conf-available/knahrvorn.conf
+
+- name: Enable custom configuration
+  file:
+    src: /etc/apache2/conf-available/knahrvorn.conf
+    dest: /etc/apache2/conf-enabled/knahrvorn.conf
+    state: link
+
 - name: Making Knahrvorn Apache configuration
   template:
     src: "etc/apache2/sites-available/000-knahrvorn.conf.j2"
