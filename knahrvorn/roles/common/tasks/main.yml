@@ -64,6 +64,7 @@
     - mutt
     - screen
     - links2
+    - htop
 
 - name: Copy unattended-upgrades configuration
   copy:
