@@ -21,36 +21,27 @@
 
 - name: Create directories for nomad volumes
   file:
-    path: "{{ item }}"
+    path: "{{ item.name }}"
     state: directory
-    owner: root
-    group: docker
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
     mode: "42775"
   loop:
-    - /export/volumes/nomad/dragonfly
-    - /export/volumes/nomad/mosquitto
-    - /export/volumes/nomad/loki
-    - /export/volumes/nomad/pgdata/api
-    - /export/volumes/nomad/pgdata/event
-    - /export/volumes/nomad/pgdata/nominatim
-    - /export/volumes/nomad/pgdata/payment
-    - /export/volumes/nomad/pgdata/status
-    - /export/volumes/nomad/pgdata/storage
-    - /export/volumes/nomad/pgdata/techlog
-    - /export/volumes/nomad/rabbitmq
-    - /mnt/nas1/volumes/nomad/nominatim
-
-- name: Set directory user permission
-  file:
-    path: "/export/volumes/nomad/{{ item }}"
-    state: directory
-    owner: nobody
-    group: docker
-    mode: "42775"
-  loop:
-    - birth
-    - flexsignal
-    - flexsignal-mqtt-samples
+    - { name: /export/volumes/nomad/dragonfly, owner: root, group: docker }
+    - { name: /export/volumes/nomad/mosquitto, owner: root, group: docker }
+    - { name: /export/volumes/nomad/loki, owner: root, group: docker }
+    - { name: /export/volumes/nomad/pgdata/api, owner: root, group: docker }
+    - { name: /export/volumes/nomad/pgdata/event, owner: root, group: docker }
+    - { name: /export/volumes/nomad/pgdata/nominatim, owner: root, group: docker }
+    - { name: /export/volumes/nomad/pgdata/payment, owner: root, group: docker }
+    - { name: /export/volumes/nomad/pgdata/status, owner: root, group: docker }
+    - { name: /export/volumes/nomad/pgdata/storage, owner: root, group: docker }
+    - { name: /export/volumes/nomad/pgdata/techlog, owner: root, group: docker }
+    - { name: /export/volumes/nomad/rabbitmq, owner: root, group: docker }
+    - { name: /mnt/nas1/volumes/nomad/nominatim, owner: root, group: docker }
+    - { name: /export/volumes/nomad/birth, owner: nobody, group: docker }
+    - { name: /export/volumes/nomad/flexsignal, owner: nobody, group: docker }
+    - { name: /export/volumes/nomad/flexsignal-mqtt-samples, owner: nobody, group: docker }
 
 - name: Making Consul configuration
   template:
