@@ -104,3 +104,16 @@
     user: www-data
     minute: "*/5"
     job: "php -f /var/www/nextcloud/cron.php --define apc.enable_cli=1"
+
+- name: Making Nextcloud Push Service File
+  template:
+    src: "etc/systemd/system/notify_push.service"
+    dest: "/etc/systemd/system/notify_push.service"
+    mode: 0644
+
+- name: Enable and start Nextcloud Push Service
+  systemd_service:
+    state: started
+    name: notify_push
+    daemon_reload: true
+    enabled: true

@@ -6,6 +6,10 @@
     ErrorLog ${APACHE_LOG_DIR}/{{ nextcloud.sitename }}-error.log
     CustomLog ${APACHE_LOG_DIR}/{{ nextcloud.sitename }}-access.log custom_combined
 
+    ProxyPass /push/ws ws://127.0.0.1:7867/ws
+    ProxyPass /push/ http://127.0.0.1:7867/
+    ProxyPassReverse /push/ http://127.0.0.1:7867/
+
     <Directory /var/www/nextcloud/>
         Options +FollowSymlinks
         AllowOverride All

@@ -6,7 +6,7 @@
 
 - name: Enable Apache proxy modules
   command:
-    cmd: a2enmod proxy_fcgi setenvif rewrite
+    cmd: a2enmod proxy proxy_http proxy_wstunnel proxy_fcgi setenvif rewrite
 
 - name: Enable PHP
   command:
