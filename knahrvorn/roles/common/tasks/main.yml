@@ -68,8 +68,11 @@
 
 - name: Copy unattended-upgrades configuration
   copy:
-    src: 'etc/apt/apt.conf.d/50unattended-upgrades'
-    dest: '/etc/apt/apt.conf.d/50unattended-upgrades'
+    src: 'etc/apt/apt.conf.d/{{ item }}'
+    dest: '/etc/apt/apt.conf.d/{{ item }}'
+  loop:
+    - 20auto-upgrades
+    - 50unattended-upgrades
 
 - name: Copy nagios-nrpe configuration
   copy:
