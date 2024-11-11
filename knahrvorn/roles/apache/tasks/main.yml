@@ -12,6 +12,18 @@
   command:
     cmd: a2enconf php8.2-fpm
 
+- name: Configure php-fpm pm settings
+  ansible.builtin.blockinfile:
+    path: /etc/php/8.2/fpm/pool.d/www.conf
+    marker: "; {mark} ANSIBLE MANAGED PM SETTINGS"
+    block: |
+      pm = dynamic
+      pm.max_children = 120
+      pm.start_servers = 12
+      pm.min_spare_servers = 6
+      pm.max_spare_servers = 18
+  notify: Restart php-fpm
+
 - name: Remove "Listen 80" from ports.conf
   lineinfile:
     path: /etc/apache2/ports.conf
