@@ -65,6 +65,7 @@
     - screen
     - links2
     - htop
+    - tcpdump
 
 - name: Copy unattended-upgrades configuration
   copy:
