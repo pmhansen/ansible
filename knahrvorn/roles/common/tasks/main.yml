@@ -135,6 +135,12 @@
     dest: /etc/postfix/main.cf
   register: postfix_conf
 
+- name: Copy Postfix relay_network
+  copy:
+    src: 'etc/postfix/relay_network'
+    dest: '/etc/postfix/relay_network'
+  register: postfix_network
+
 - name: Copy Postfix relay_sender
   copy:
     src: 'etc/postfix/relay_sender'
@@ -162,7 +168,8 @@
   when: > 
     postfix_alias.changed or 
     postfix_mailname.changed or 
-    postfix_conf.changed or 
+    postfix_conf.changed or
+    postfix_network.changed or 
     postfix_auth.changed or 
     postfix_sender.changed
 
