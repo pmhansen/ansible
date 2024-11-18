@@ -1,2 +1,1 @@
-#[smtp.office365.com]:587 {{ postfix.redeem }}
-[smtp.office365.com]:587 {{ postfix.support }}
+[smtp.office365.com]:587 {{ postfix.itservices }}
