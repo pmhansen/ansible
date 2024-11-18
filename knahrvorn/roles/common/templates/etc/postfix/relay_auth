@@ -1,1 +1,1 @@
-[smtp.office365.com]:587 {{ postfix.itservices }}
+[smtp.office365.com]:587 support@itservices.nu:{{ postfix.itservices }}
