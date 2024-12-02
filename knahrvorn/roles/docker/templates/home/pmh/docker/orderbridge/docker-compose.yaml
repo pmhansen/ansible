@@ -1,0 +1,14 @@
+services:
+  app:
+    image: hub.flexdevel.com:5000/orderbridge
+    container_name: orderbridge
+    environment:
+      MS_APP_ID: ${MS_APP_ID}
+      MS_SECRET_TEXT: ${MS_SECRET_TEXT}
+      MS_TENANT_ID: ${MS_TENANT_ID}
+      MAILBOX: ${MAILBOX}
+      LOG_LEVEL: ${LOG_LEVEL}
+      PROD: ${PROD}
+    restart: always
+    logging:
+      driver: journald

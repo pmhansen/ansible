@@ -75,6 +75,7 @@
     owner: pmh
     group: pmh
   loop:
+    - orderbridge
     - redeem
     - redeem/database
     - dstar4all
@@ -91,6 +92,7 @@
     group: pmh
     mode: 0644
   loop:
+    - orderbridge
     - redeem
     - dstar4all
     - registry
@@ -106,6 +108,7 @@
     group: pmh
     mode: 0750
   loop:
+    - orderbridge
     - redeem
     - dstar4all
     - registry
