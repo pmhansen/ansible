@@ -14,6 +14,8 @@ _check_env DB_NAME
 _check_env DB_USERNAME
 _check_env DB_PASSWORD
 _check_env FREEPAY_API_KEY
+_check_env FREEPAY_API_KEY_NOK
+_check_env FREEPAY_API_KEY_SEK
 _check_env FREEPAY_CALLBACK_URL
 _check_env MODE
 _check_env ORDER_PREFIX
