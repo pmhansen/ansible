@@ -21,8 +21,8 @@
     path: /etc/hosts
     block: |
       # HAProxy
-      10.10.10.72     knahrvorn-eno1-0 nextcloud.pbnet.dk
+      10.10.10.72     knahrvorn-eno1-0 nextcloud.pbnet.dk knahrvorn.pbnet.dk
       # Apache
       10.10.10.73     knahrvorn-eno1-1 nextcloud.c4a.local
       # Knahrvorn
-      10.10.10.80     knahrvorn-eno1 knahrvorn knahrvorn.c4a.local knahrvorn.pbnet.dk nomad.pbnet.dk hub.flexdevel.com birth.flexdevel.com api.pbnet.dk
+      10.10.10.80     knahrvorn-eno1 knahrvorn knahrvorn.c4a.local nomad.pbnet.dk hub.flexdevel.com birth.flexdevel.com api.pbnet.dk
