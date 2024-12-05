@@ -57,8 +57,8 @@
 
 - name: Making Knahrvorn Apache configuration
   template:
-    src: "etc/apache2/sites-available/000-knahrvorn.conf.j2"
-    dest: "/etc/apache2/sites-available/000-knahrvorn.conf"
+    src: etc/apache2/sites-available/000-knahrvorn.conf.j2
+    dest: /etc/apache2/sites-available/000-knahrvorn.conf
     mode: 0644
 
 - name: Disable default site
@@ -68,6 +68,23 @@
 - name: Enable Knahrvorn Apache site
   command:
     cmd: a2ensite 000-knahrvorn
+
+- name: Give Apache write access to folder
+  file:
+    path: /var/www/html
+    owner: www-data
+    group: www-data
+    mode: 0775
+
+- name: Copy php scripts
+  copy:
+    src: "var/www/html/{{ item }}"
+    dest: "/var/www/html/{{ item }}"
+    owner: www-data
+    group: www-data
+  loop:
+    - phpconf.php
+    - request.php
 
 - name: Reload Apache to apply changes
   ansible.builtin.service:
