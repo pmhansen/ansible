@@ -109,7 +109,7 @@
   template:
     src: "etc/systemd/system/notify_push.service"
     dest: "/etc/systemd/system/notify_push.service"
-    mode: 0644
+    mode: 0754
 
 - name: Enable and start Nextcloud Push Service
   systemd_service:
