@@ -55,6 +55,7 @@
     group: "{{ item.group | default('docker') }}"
     mode: "{{ item.mode | default('42775') }}"
   loop:
+    - path: orderbridge
     - path: redeem/pgdata
     - path: redeem/redis/conf
     - path: redeem/session

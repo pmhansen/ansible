@@ -9,6 +9,8 @@ services:
       MAILBOX: ${MAILBOX}
       LOG_LEVEL: ${LOG_LEVEL}
       PROD: ${PROD}
+    volumes:
+      - /export/volumes/docker/orderbridge:/storage
     restart: always
     logging:
       driver: journald
