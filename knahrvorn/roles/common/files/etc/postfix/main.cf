@@ -22,8 +22,8 @@ readme_directory = no
 compatibility_level = 3.6
 
 # TLS parameters
-smtpd_tls_cert_file=/etc/letsencrypt/live/balder.pbnet.dk-0001/fullchain.pem
-smtpd_tls_key_file=/etc/letsencrypt/live/balder.pbnet.dk-0001/privkey.pem
+smtpd_tls_cert_file=/etc/letsencrypt/live/knahrvorn.pbnet.dk/fullchain.pem
+smtpd_tls_key_file=/etc/letsencrypt/live/knahrvorn.pbnet.dk/privkey.pem
 smtpd_tls_security_level=may
 
 smtp_tls_CApath=/etc/ssl/certs

@@ -9,11 +9,9 @@ certbot certonly --dns-cloudflare \
 certbot certonly --standalone --agree-tos --expand \
         --non-interactive -m ph@pbnet.dk --preferred-challenges http \
         --http-01-port 8888 --renew-with-new-domains --keep-until-expiring \
-        -d balder.pbnet.dk \
+        -d knahrvorn.pbnet.dk \
         -d ipsc2-dk-test.dmrplus.dk \
         -d gw.oz4red.dk \
-        -d clips.pbnet.dk \
-        -d knahrvorn.pbnet.dk \
         -d tiddly.pbnet.dk \
         -d nextcloud.pbnet.dk \
         -d boxknox.com \
@@ -34,13 +32,13 @@ cat /etc/letsencrypt/live/flexdevel.com/privkey.pem > /etc/letsencrypt/live/flex
 cat /etc/letsencrypt/live/flexdevel.com/fullchain.pem >> /etc/letsencrypt/live/flexdevel.com/flexdevel.pem
 cat /etc/letsencrypt/live/flexdevel.com/privkey.pem > /export/volumes/docker/registry/certs/flexdevel.key.pem
 cat /etc/letsencrypt/live/flexdevel.com/fullchain.pem > /export/volumes/docker/registry/certs/flexdevel.crt.pem
-cat /etc/letsencrypt/live/balder.pbnet.dk-0001/privkey.pem > /etc/letsencrypt/live/balder.pbnet.dk-0001/balder.pem
-cat /etc/letsencrypt/live/balder.pbnet.dk-0001/fullchain.pem >> /etc/letsencrypt/live/balder.pbnet.dk-0001/balder.pem
+cat /etc/letsencrypt/live/knahrvorn.pbnet.dk/privkey.pem > /etc/letsencrypt/live/knahrvorn.pbnet.dk/knahrvorn.pem
+cat /etc/letsencrypt/live/knahrvorn.pbnet.dk/fullchain.pem >> /etc/letsencrypt/live/knahrvorn.pbnet.dk/knahrvorn.pem
 
 consul kv put "certs/letsencrypt/flexdevel-com/cert" @"/etc/letsencrypt/live/flexdevel.com/fullchain.pem"
 consul kv put "certs/letsencrypt/flexdevel-com/key" @"/etc/letsencrypt/live/flexdevel.com/privkey.pem"
-consul kv put "certs/letsencrypt/balder-pbnet-dk/cert" @"/etc/letsencrypt/live/balder.pbnet.dk-0001/fullchain.pem"
-consul kv put "certs/letsencrypt/balder-pbnet-dk/key" @"/etc/letsencrypt/live/balder.pbnet.dk-0001/privkey.pem"
+consul kv put "certs/letsencrypt/knahrvorn-pbnet-dk/cert" @"/etc/letsencrypt/live/knahrvorn.pbnet.dk/fullchain.pem"
+consul kv put "certs/letsencrypt/knahrvorn-pbnet-dk/key" @"/etc/letsencrypt/live/knahrvorn.pbnet.dk/privkey.pem"
 
-base64 -w0 /etc/letsencrypt/live/balder.pbnet.dk-0001/privkey.pem | consul kv put "certs/letsencrypt/balder-pbnet-dk/base64/key" -
-base64 -w0 /etc/letsencrypt/live/balder.pbnet.dk-0001/fullchain.pem | consul kv put "certs/letsencrypt/balder-pbnet-dk/base64/cert" -
+base64 -w0 /etc/letsencrypt/live/knahrvorn.pbnet.dk/privkey.pem | consul kv put "certs/letsencrypt/knahrvorn-pbnet-dk/base64/key" -
+base64 -w0 /etc/letsencrypt/live/knahrvorn.pbnet.dk/fullchain.pem | consul kv put "certs/letsencrypt/knahrvorn-pbnet-dk/base64/cert" -
