@@ -3,6 +3,7 @@ services:
     image: hub.flexdevel.com:5000/orderbridge
     container_name: orderbridge
     environment:
+      API_ADDR: ${API_ADDR}
       MS_APP_ID: ${MS_APP_ID}
       MS_SECRET_TEXT: ${MS_SECRET_TEXT}
       MS_TENANT_ID: ${MS_TENANT_ID}
