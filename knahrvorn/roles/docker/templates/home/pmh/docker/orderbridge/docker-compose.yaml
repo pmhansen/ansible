@@ -10,6 +10,8 @@ services:
       MAILBOX: ${MAILBOX}
       LOG_LEVEL: ${LOG_LEVEL}
       PROD: ${PROD}
+    ports:
+      - ${WEB_PORT}
     volumes:
       - /export/volumes/docker/orderbridge:/storage
     restart: always

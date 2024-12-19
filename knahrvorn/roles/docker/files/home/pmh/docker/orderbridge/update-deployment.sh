@@ -8,6 +8,7 @@ function _check_env {
 }
 
 _check_env API_ADDR
+_check_env WEB_PORT
 _check_env MAILBOX
 _check_env MS_APP_ID
 _check_env MS_SECRET_TEXT
