@@ -13,6 +13,7 @@ _check_env MAILBOX
 _check_env MS_APP_ID
 _check_env MS_SECRET_TEXT
 _check_env MS_TENANT_ID
+_check_env IDP_URL
 _check_env PROD
 
 docker compose pull

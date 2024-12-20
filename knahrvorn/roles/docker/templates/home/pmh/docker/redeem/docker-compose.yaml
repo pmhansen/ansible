@@ -117,6 +117,7 @@ services:
       CARE1_API: ${CARE1_API}
       CARE1_USERNAME: ${CARE1_USERNAME}
       CARE1_PASSWORD: ${CARE1_PASSWORD}
+      CLIENTS: ${CLIENTS}
     volumes:
       - ${SESSION_DIR}
     restart: always

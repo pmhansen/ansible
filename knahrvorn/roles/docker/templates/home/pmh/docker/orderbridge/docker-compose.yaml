@@ -8,6 +8,7 @@ services:
       MS_SECRET_TEXT: ${MS_SECRET_TEXT}
       MS_TENANT_ID: ${MS_TENANT_ID}
       MAILBOX: ${MAILBOX}
+      IDP_URL: ${IDP_URL}
       LOG_LEVEL: ${LOG_LEVEL}
       PROD: ${PROD}
     ports:
