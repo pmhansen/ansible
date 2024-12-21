@@ -9,6 +9,7 @@ services:
       MS_TENANT_ID: ${MS_TENANT_ID}
       MAILBOX: ${MAILBOX}
       IDP_URL: ${IDP_URL}
+      IDP_CLIENT_ID: ${IDP_CLIENT_ID}
       LOG_LEVEL: ${LOG_LEVEL}
       PROD: ${PROD}
     ports:
