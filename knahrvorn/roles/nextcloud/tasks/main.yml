@@ -1,3 +1,7 @@
+- name: "Print Nextcloud version in use:"
+  debug:
+    msg: "The Nextcloud version in use is {{ nextcloud_version }}"
+
 - name: Create target directory for Nextcloud
   file:
     path: /var/www/nextcloud
@@ -14,13 +18,13 @@
 
 - name: Download Nextcloud archive
   get_url:
-    url: https://github.com/nextcloud/server/archive/refs/tags/v30.0.2.tar.gz
-    dest: /tmp/nextcloud-v30.0.2.tar.gz
+    url: https://github.com/nextcloud/server/archive/refs/tags/v{{ nextcloud_version }}.tar.gz
+    dest: /tmp/nextcloud-v{{ nextcloud_version }}.tar.gz
   when: nextcloud_found_files.stdout == ""
 
 - name: Extract Nextcloud archive
   unarchive:
-    src: /tmp/nextcloud-v30.0.2.tar.gz
+    src: /tmp/nextcloud-v{{ nextcloud_version }}.tar.gz
     dest: /var/www/nextcloud
     remote_src: yes
     extra_opts: ['--strip-components=1']
