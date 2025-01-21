@@ -74,3 +74,13 @@
   tasks:
     - import_role:
         name: tiddlywiki
+
+- hosts: all
+  gather_facts: false
+  name: Do log_listener setup
+  become: true
+  tags:
+    - "log_listener"
+  tasks:
+    - import_role:
+        name: log_listener

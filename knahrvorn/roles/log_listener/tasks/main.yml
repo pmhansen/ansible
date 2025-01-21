@@ -1,0 +1,34 @@
+# Compile github.com/flxsense/log_listener and place the binary in /usr/local/bin
+
+- name: Create log_listener system group for the service
+  group:
+    name: log_listener
+    system: true
+
+- name: Create log_listener system user for the service
+  user:
+    name: log_listener
+    system: true
+    create_home: false
+    shell: /usr/sbin/nologin
+
+- name: Ensure log_listener output path
+  file:
+    path: /mnt/nas1/log_listener
+    state: directory
+    owner: log_listener
+    group: log_listener
+
+- name: Make log_listener systemd service file
+  copy:
+    src: etc/systemd/system/log_listener.service
+    dest: /etc/systemd/system/log_listener.service
+    owner: root
+    group: root
+
+- name: Enable and start log_listener Service
+  systemd_service:
+    state: started
+    name: log_listener
+    daemon_reload: true
+    enabled: true

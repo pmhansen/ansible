@@ -1,0 +1,14 @@
+[Unit]
+Description=Log Listener Service
+After=network.target
+
+[Service]
+Type=simple
+User=log_listener
+Group=log_listener
+ExecStart=/usr/local/bin/log_listener -p 30000 -b /mnt/nas1/log_listener
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target
