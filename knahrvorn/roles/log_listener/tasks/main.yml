@@ -32,3 +32,11 @@
     name: log_listener
     daemon_reload: true
     enabled: true
+
+- name: Log_listener files cleanup
+  cron:
+    name: Log_listener files cleanup
+    user: pmh
+    minute: "20"
+    hour: "9"
+    job: "find /mnt/nas1/log_listener/*.txt -type f -mtime +14 -exec rm -f {} \\;"
