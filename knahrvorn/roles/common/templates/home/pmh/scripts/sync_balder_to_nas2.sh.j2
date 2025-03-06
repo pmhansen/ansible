@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 function _time {
     echo $(date +%H.%M.%S)
 }
@@ -34,114 +36,60 @@ fi
 echo -e "\nMySQL backup $(_time) ..."
 sudo mkdir -p /usr/local/mysqlbackup
 sudo mysqldump -u root nextcloud |sudo tee /usr/local/mysqlbackup/nextcloud.sql >/dev/null
+sudo -S -E rsync -av --delete --numeric-ids -e "ssh" "/usr/local/mysqlbackup" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
 
-sudo -S -E rdiff-backup --api-version 201 --force backup --print-statistics /usr/local/mysqlbackup \
-    ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/mysqlbackup
-sudo -S -E rdiff-backup --api-version 201 remove increments --older-than 20B \
-    ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/mysqlbackup
+echo -e "\nanime backup $(_time) ..."
+sudo -S -E rsync -av --delete --numeric-ids -e "ssh" "/mnt/nas1/plex/anime" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
+
+echo -e "\ncamera backup $(_time) ..."
+sudo -S -E rsync -av --delete --numeric-ids -e "ssh" "/mnt/nas1/plex/camera" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
+
+echo -e "\nchildren backup $(_time) ..."
+sudo -S -E rsync -av --delete --numeric-ids -e "ssh" "/mnt/nas1/plex/children" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
+
+echo -e "\ndocumentaries backup $(_time) ..."
+sudo -S -E rsync -av --delete --numeric-ids -e "ssh" "/mnt/nas1/plex/documentaries" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
 
 echo -e "\netc backup $(_time) ..."
-sudo -S -E rdiff-backup --api-version 201 --force backup --print-statistics /etc \
-    ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/etc
-sudo -S -E rdiff-backup --api-version 201 remove increments --older-than 20B \
-    ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/etc
-
-echo -e "\nhome backup $(_time) ..."
-sudo -S -E rdiff-backup --api-version 201 --force backup --print-statistics /home \
-    ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/home
-sudo -S -E rdiff-backup --api-version 201 remove increments --older-than 20B \
-    ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/home
-
-echo -e "\nwww backup $(_time) "
-sudo -S -E rdiff-backup --api-version 201 --force backup --print-statistics /var/www \
-    ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/www
-sudo -S -E rdiff-backup --api-version 201 remove increments --older-than 20B \
-    ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/www
+sudo -S -E rsync -av --delete --numeric-ids -e "ssh" "/etc" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
 
 echo -e "\nexport backup $(_time) ..."
-sudo -S -E rdiff-backup --api-version 201 --force backup --print-statistics /export \
-    ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/export
-sudo -S -E rdiff-backup --api-version 201 remove increments --older-than 20B \
-    ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/export
+sudo -S -E rsync -av --delete --numeric-ids -e "ssh" "/export" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
 
-echo -e "\nnas1 backup $(_time) ..."
-sudo -S -E rdiff-backup --api-version 201 --force backup --print-statistics \
-    --exclude /mnt/nas1/plex --exclude /mnt/nas1/tmp --exclude /mnt/nas1/volumes /mnt/nas1 \
-    ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/nas1
-sudo -S -E rdiff-backup --api-version 201 remove increments --older-than 20B \
-    ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/nas1
+echo -e "\nhome backup $(_time) ..."
+sudo -S -E rsync -av --delete --numeric-ids -e "ssh" "/home" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
+
+echo -e "\nmovies backup $(_time) ..."
+sudo -S -E rsync -av --delete --numeric-ids -e "ssh" "/mnt/nas1/plex/movies" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
+
+echo -e "\nmusic backup $(_time) ..."
+sudo -S -E rsync -av --delete --numeric-ids -e "ssh" "/mnt/nas1/plex/music" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
 
 echo -e "\nplexmediaserver backup $(_time) ..."
-sudo -S -E rdiff-backup --api-version 201 --force backup --print-statistics \
-    "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server" \
-    ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/plexmediaserver
-sudo -S -E rdiff-backup --api-version 201 remove increments --older-than 20B \
-    ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/plexmediaserver
+sudo -S -E rsync -av --delete --numeric-ids -e "ssh" "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/*" \
+    "{{ scripts.backup_user }}:/mnt/tank/knahrvorn/plexmediaserver"
 
-echo -e "\nList MySQL increments $(_time) ..."
-sudo -S -E rdiff-backup --api-version 201 list increments ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/mysqlbackup
+echo -e "\nnas1 backup $(_time) ..."
+sudo -S -E rsync -av --delete --numeric-ids \
+    --exclude /mnt/nas1/plex \
+    --exclude /mnt/nas1/tmp \
+    --exclude /mnt/nas1/volumes \
+    -e "ssh" "/mnt/nas1" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
 
-echo -e "\nList etc increments $(_time) ..."
-sudo -S -E rdiff-backup --api-version 201 list increments ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/etc
+echo -n "\nseries backup $(_time) ..."
+sudo -S -E rsync -av --delete --numeric-ids -e "ssh" "/mnt/nas1/plex/series" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
 
-echo -e "\nList home increments $(_time) ..."
-sudo -S -E rdiff-backup --api-version 201 list increments ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/home
+echo -e "\nwww backup $(_time) "
+sudo -S -E rsync -av --delete --numeric-ids -e "ssh" "/var/www" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
 
-echo -e "\nList www increments $(_time) ..."
-sudo -S -E rdiff-backup --api-version 201 list increments ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/www
+snapshot=tank/knahrvorn@$(date +\%Y-\%m-\%d)
+echo "Create ZFS snapshot $snapshot"
+sudo -S -E ssh {{ scripts.backup_user }} "zfs snapshot $snapshot"
 
-echo -e "\nList export increments $(_time) ..."
-sudo -S -E rdiff-backup --api-version 201 list increments ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/export
-
-echo -e "\nList nas1 increments $(_time) ..."
-sudo -S -E rdiff-backup --api-version 201 list increments ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/nas1
-
-echo -e "\nList plexmediaserver increments $(_time) ..."
-sudo -S -E rdiff-backup --api-version 201 list increments ssh://{{ scripts.backup_user }}::/mnt/vol1/balder/plexmediaserver
-
-echo
-echo "anime backup $(_time) ..."
-sudo -S -E rsync --delete --keep-dirlinks -avz -e \
-    ssh --progress "/mnt/nas1/plex/anime/" \
-    nas2.pbnet.dk:/mnt/vol1/balder/anime
-
-echo
-echo "camera backup $(_time) ..."
-sudo -S -E rsync --delete --keep-dirlinks -avz -e \
-    ssh --progress "/mnt/nas1/plex/camera/" \
-    nas2.pbnet.dk:/mnt/vol1/balder/camera
-
-echo
-echo "children backup $(_time) ..."
-sudo -S -E rsync --delete --keep-dirlinks -avz -e \
-    ssh --progress "/mnt/nas1/plex/children/" \
-    nas2.pbnet.dk:/mnt/vol1/balder/children
-
-echo
-echo "documentaries backup $(_time) ..."
-sudo -S -E rsync --delete --keep-dirlinks -avz -e \
-    ssh --progress "/mnt/nas1/plex/documentaries/" \
-    nas2.pbnet.dk:/mnt/vol1/balder/documentaries
-
-echo
-echo "movies backup $(_time) ..."
-sudo -S -E rsync --delete --keep-dirlinks -avz -e \
-    ssh --progress "/mnt/nas1/plex/movies/" \
-    nas2.pbnet.dk:/mnt/vol1/balder/movies
-
-echo
-echo "music backup $(_time) ..."
-sudo -S -E rsync --delete --keep-dirlinks -avz -e \
-    ssh --progress "/mnt/nas1/plex/music/" \
-    nas2.pbnet.dk:/mnt/vol1/balder/music
-
-echo
-echo "series backup $(_time) ..."
-sudo -S -E rsync --delete --keep-dirlinks -avz -e \
-    ssh --progress "/mnt/nas1/plex/series/" \
-    nas2.pbnet.dk:/mnt/vol1/balder/series
+echo "Pruning old snapshots"
+sudo -S -E {{ scripts.backup_user }} -p 22 "zfs list -t snapshot -o name -s creation | grep 'tank/knahrvorn@' | tail -n +15 | xargs -r -n 1 zfs destroy -r"
 
 # Shutdown backup server
-sudo -S -E ssh {{ scripts.backup_user }} -p 22 "shutdown -h now"
+sudo -S -E ssh {{ scripts.backup_user }} -p 22 "shutdown -p now"
 
 echo -e "\nFinished at:  $(_time)"
