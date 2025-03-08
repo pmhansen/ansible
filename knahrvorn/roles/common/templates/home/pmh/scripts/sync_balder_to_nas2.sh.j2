@@ -66,28 +66,29 @@ echo -e "\nmusic backup $(_time) ..."
 sudo -S -E rsync -av --delete --numeric-ids -e "ssh" "/mnt/nas1/plex/music" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
 
 echo -e "\nplexmediaserver backup $(_time) ..."
-sudo -S -E rsync -av --delete --numeric-ids -e "ssh" "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/*" \
+sudo -S -E ssh {{ scripts.backup_user }} -p 22 "mkdir -p /mnt/tank/knahrvorn/plexmediaserver"
+sudo -S -E rsync -av --delete --numeric-ids -e "ssh" "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/" \
     "{{ scripts.backup_user }}:/mnt/tank/knahrvorn/plexmediaserver"
 
 echo -e "\nnas1 backup $(_time) ..."
-sudo -S -E rsync -av --delete --numeric-ids \
-    --exclude /mnt/nas1/plex \
-    --exclude /mnt/nas1/tmp \
-    --exclude /mnt/nas1/volumes \
+sudo -S -E rsync -av --delete --numeric-ids --exclude=plex --exclude=tmp --exclude=volumes \
     -e "ssh" "/mnt/nas1" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
 
-echo -n "\nseries backup $(_time) ..."
+echo -e "\nseries backup $(_time) ..."
 sudo -S -E rsync -av --delete --numeric-ids -e "ssh" "/mnt/nas1/plex/series" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
 
 echo -e "\nwww backup $(_time) "
 sudo -S -E rsync -av --delete --numeric-ids -e "ssh" "/var/www" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
 
 snapshot=tank/knahrvorn@$(date +\%Y-\%m-\%d)
-echo "Create ZFS snapshot $snapshot"
+echo -e "\nCreate ZFS snapshot $snapshot"
 sudo -S -E ssh {{ scripts.backup_user }} "zfs snapshot $snapshot"
 
-echo "Pruning old snapshots"
-sudo -S -E {{ scripts.backup_user }} -p 22 "zfs list -t snapshot -o name -s creation | grep 'tank/knahrvorn@' | tail -n +15 | xargs -r -n 1 zfs destroy -r"
+echo -e "\nPruning old snapshots"
+sudo -S -E ssh {{ scripts.backup_user }} -p 22 "zfs list -t snapshot -o name -s creation | grep 'tank/knahrvorn@' | tail -n +15 | xargs -r -n 1 zfs destroy -r"
+
+echo -e "\nScrubbing pool tank"
+sudo -S -E ssh {{ scripts.backup_user }} -p 22 "zpool scrub tank;zpool status"
 
 # Shutdown backup server
 sudo -S -E ssh {{ scripts.backup_user }} -p 22 "shutdown -p now"
