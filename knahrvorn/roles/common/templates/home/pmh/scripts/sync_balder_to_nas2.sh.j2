@@ -87,8 +87,7 @@ sudo -S -E ssh {{ scripts.backup_user }} "zfs snapshot $snapshot"
 echo -e "\nPruning old snapshots"
 sudo -S -E ssh {{ scripts.backup_user }} -p 22 "zfs list -t snapshot -o name -s creation | grep 'tank/knahrvorn@' | tail -n +15 | xargs -r -n 1 zfs destroy -r"
 
-echo -e "\nScrubbing pool tank"
-sudo -S -E ssh {{ scripts.backup_user }} -p 22 "zpool scrub tank;zpool status"
+sudo -S -E ssh {{ scripts.backup_user }} -p 22 "zpool status"
 
 # Shutdown backup server
 sudo -S -E ssh {{ scripts.backup_user }} -p 22 "shutdown -p now"
