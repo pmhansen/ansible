@@ -54,7 +54,7 @@ echo -e "\netc backup $(_time) ..."
 sudo -S -E rsync -av --delete --numeric-ids -e "ssh" "/etc" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
 
 echo -e "\nexport backup $(_time) ..."
-sudo -S -E rsync -av --delete --numeric-ids -e "ssh" "/export" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
+sudo -S -E rsync -a --delete --numeric-ids -e "ssh" "/export" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
 
 echo -e "\nhome backup $(_time) ..."
 sudo -S -E rsync -av --delete --numeric-ids -e "ssh" "/home" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
@@ -67,11 +67,11 @@ sudo -S -E rsync -av --delete --numeric-ids -e "ssh" "/mnt/nas1/plex/music" "{{ 
 
 echo -e "\nplexmediaserver backup $(_time) ..."
 sudo -S -E ssh {{ scripts.backup_user }} -p 22 "mkdir -p /mnt/tank/knahrvorn/plexmediaserver"
-sudo -S -E rsync -av --delete --numeric-ids -e "ssh" "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/" \
+sudo -S -E rsync -a --delete --numeric-ids -e "ssh" "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/" \
     "{{ scripts.backup_user }}:/mnt/tank/knahrvorn/plexmediaserver"
 
 echo -e "\nnas1 backup $(_time) ..."
-sudo -S -E rsync -av --delete --numeric-ids --exclude=plex --exclude=tmp --exclude=volumes \
+sudo -S -E rsync -a --delete --numeric-ids --exclude=plex --exclude=tmp --exclude=volumes \
     -e "ssh" "/mnt/nas1" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
 
 echo -e "\nseries backup $(_time) ..."
