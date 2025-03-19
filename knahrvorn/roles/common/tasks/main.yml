@@ -205,7 +205,7 @@
     name: Sync to nas2
     user: pmh
     minute: "0"
-    hour: "22"
+    hour: "20"
     job: "/home/pmh/scripts/sync_balder_to_nas2.sh"
 
 - name: Update Docker registry cronjob

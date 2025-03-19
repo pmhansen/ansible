@@ -33,7 +33,7 @@ if [ "$result" -ne 1 ]; then
     exit 1
 fi
 
-echo -e "\nMySQL backup $(_time) ..."
+echo -e "\n\nMySQL backup $(_time) ..."
 sudo mkdir -p /usr/local/mysqlbackup
 sudo mysqldump -u root nextcloud |sudo tee /usr/local/mysqlbackup/nextcloud.sql >/dev/null
 sudo -S -E rsync -av --delete --numeric-ids -e "ssh" "/usr/local/mysqlbackup" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
