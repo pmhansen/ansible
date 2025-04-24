@@ -85,7 +85,9 @@ echo -e "\nCreate ZFS snapshot $snapshot"
 sudo -S -E ssh {{ scripts.backup_user }} "zfs snapshot $snapshot"
 
 echo -e "\nPruning old snapshots"
-sudo -S -E ssh {{ scripts.backup_user }} -p 22 "zfs list -t snapshot -o name -s creation | grep 'tank/knahrvorn@' | tail -n +15 | xargs -r -n 1 zfs destroy -r"
+sudo -S -E ssh {{ scripts.backup_user }} -p 22 "zfs list -t snapshot -o name -s creation | grep 'tank/knahrvorn@' \
+    | sed -e :a -e '$d;N;2,14ba' -e 'P;D' \
+    | xargs -r -n 1 zfs destroy -r"
 
 sudo -S -E ssh {{ scripts.backup_user }} -p 22 "zpool status"
 
