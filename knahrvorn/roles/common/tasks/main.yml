@@ -65,7 +65,11 @@
     - screen
     - links2
     - htop
-    - tcpdump
+    - tcpdump 
+    - qemu-system 
+    - libvirt-daemon-system 
+    - virtinst
+    - qemu-utils
 
 - name: Copy unattended-upgrades configuration
   copy:
@@ -82,7 +86,7 @@
   register: nrpe_config
 
 - name: Restart nagios-nrpe-server
-  systemd:
+  systemd_service:
     name: nagios-nrpe-server
     state: reloaded
   when: nrpe_config.changed
@@ -255,3 +259,25 @@
   copy:
     dest: /root/.ssh/id_rsa.pub
     content: "{{ ssh.nas2_pub }}"
+
+- name: Create directories for libvirt
+  file:
+    path: "{{ item.name }}"
+    state: directory
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+    mode: "0775"
+  loop:
+    - { name: /mnt/nas1/volumes/libvirt/images, owner: root, group: libvirt }
+    - { name: /mnt/nas1/volumes/libvirt/iso, owner: root, group: libvirt }
+
+- name: Start libvirtd
+  systemd_service:
+    state: started
+    name: libvirtd
+
+- name: Add pmh to groups
+  user:
+    name: pmh
+    groups: libvirt,kvm
+    append: yes
