@@ -3,9 +3,9 @@
 BACKUP_PATH=/mnt/nas1/knahrvorn/postgresql
 sudo mkdir -p $BACKUP_PATH
 
-alias pg_basebackup=~/postgresql/pgsql-17.0/bin/pg_basebackup
-alias pg_dump=~/postgresql/pgsql-17.0/bin/pg_dump
-alias pg_dumpall=~/postgresql/pgsql-17.0/bin/pg_dumpall
+alias pg_basebackup=~/postgresql/pgsql-17.5/bin/pg_basebackup
+alias pg_dump=~/postgresql/pgsql-17.5/bin/pg_dump
+alias pg_dumpall=~/postgresql/pgsql-17.5/bin/pg_dumpall
 shopt -s expand_aliases
 
 PGPASSWORD={{ scripts.redeem_password }} pg_dumpall -U redeem -h localhost -p 5433 | sudo tee $BACKUP_PATH/redeem.dump >/dev/null
