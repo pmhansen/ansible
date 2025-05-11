@@ -1,6 +1,6 @@
 services:
   db:
-    image: postgres:16-alpine
+    image: postgres:17-alpine
     container_name: redeem_postgresql
     environment:
       POSTGRES_INITDB_ARGS: --locale=da_DK.UTF-8
