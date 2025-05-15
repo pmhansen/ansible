@@ -46,4 +46,4 @@
     user: pmh
     minute: "30"
     hour: "12"
-    job: "find /mnt/nas1/log_listener/*.txt -type f -mtime +14 -exec rm -f {} \\;"
+    job: "find /mnt/nas1/log_listener/ -name *.txt -type f -mtime +14 -exec rm -f {} \\;"
