@@ -29,7 +29,7 @@
   loop:
     - { name: /export/volumes/nomad/dragonfly, owner: root, group: docker }
     - { name: /export/volumes/nomad/mosquitto, owner: root, group: docker }
-    - { name: /export/volumes/nomad/grafana, owner: root, group: docker }
+    - { name: /export/volumes/nomad/grafana, owner: 472, group: docker }
     - { name: /export/volumes/nomad/loki, owner: root, group: docker }
     - { name: /export/volumes/nomad/pgdata/api, owner: root, group: docker }
     - { name: /export/volumes/nomad/pgdata/event, owner: root, group: docker }
