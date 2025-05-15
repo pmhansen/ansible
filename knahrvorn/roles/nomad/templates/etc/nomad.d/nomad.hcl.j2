@@ -1,4 +1,4 @@
-# Full configuration options can be found at https://www.nomadproject.io/docs/configuration
+ # Full configuration options can be found at https://www.nomadproject.io/docs/configuration
 
 data_dir  = "/opt/nomad/data"
 bind_addr = "{{ network.ip }}"
@@ -76,6 +76,11 @@ client {
 
   host_volume "flexsignal-mqtt-samples" {
     path      = "/export/volumes/nomad/flexsignal-mqtt-samples"
+    read_only = false
+  }
+
+  host_volume "grafana" {
+    path      = "/export/volumes/nomad/grafana"
     read_only = false
   }
 
