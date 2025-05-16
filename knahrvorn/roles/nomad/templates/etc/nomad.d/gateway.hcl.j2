@@ -1,4 +1,8 @@
 client {
+  host_network "ingress" {
+    interface = "eno1"
+  }
+
   host_network "gateway001" {
     cidr = "{{ network.ip_alias_0 }}/32"
   }
