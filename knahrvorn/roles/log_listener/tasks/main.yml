@@ -44,6 +44,6 @@
   cron:
     name: Log_listener files cleanup
     user: pmh
-    minute: "30"
+    minute: "45"
     hour: "12"
     job: "find /mnt/nas1/log_listener/ -name *.txt -type f -mtime +14 -exec rm -f {} \\;"
