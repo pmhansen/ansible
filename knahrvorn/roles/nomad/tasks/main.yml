@@ -38,6 +38,7 @@
     - { name: /export/volumes/nomad/pgdata/status, owner: root, group: docker }
     - { name: /export/volumes/nomad/pgdata/storage, owner: root, group: docker }
     - { name: /export/volumes/nomad/pgdata/techlog, owner: root, group: docker }
+    - { name: /export/volumes/nomad/prometheus, owner: root, group: docker }
     - { name: /export/volumes/nomad/rabbitmq, owner: root, group: docker }
     - { name: /mnt/nas1/volumes/nomad/nominatim, owner: root, group: docker }
     - { name: /export/volumes/nomad/birth, owner: nobody, group: docker }

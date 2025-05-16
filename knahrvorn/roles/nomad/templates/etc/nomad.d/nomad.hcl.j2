@@ -128,7 +128,12 @@ client {
     path      = "/export/volumes/nomad/pgdata/techlog"
     read_only = false
   }
-  
+
+  host_volume "prometheus" {
+    path      = "/export/volumes/nomad/prometheus"
+    read_only = false
+  }
+
   host_volume "rabbitmq" {
     path      = "/export/volumes/nomad/rabbitmq"
     read_only = false
