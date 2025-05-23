@@ -33,6 +33,10 @@ if [ "$result" -ne 1 ]; then
     exit 1
 fi
 
+# Mark running job
+JOBS=/var/tmp/jobs
+sudo -S -E ssh {{ scripts.backup_user }} -p 22 "mkdir -p $JOBS; touch $JOBS/$(basename $0)"
+
 echo -e "\n\nMySQL backup $(_time) ..."
 sudo mkdir -p /usr/local/mysqlbackup
 sudo mysqldump -u root nextcloud |sudo tee /usr/local/mysqlbackup/nextcloud.sql >/dev/null
@@ -93,5 +97,15 @@ sudo -S -E ssh {{ scripts.backup_user }} -p 22 "zpool status"
 
 # Shutdown backup server
 sudo -S -E ssh {{ scripts.backup_user }} -p 22 "shutdown -p now"
+
+sudo -S -E ssh {{ scripts.backup_user }} -p 22 "
+rm -f '$JOBS/$(basename $0)'
+if ls '$JOBS'/* >/dev/null 2>&1; then
+    echo -e '\nThere are other running jobs'
+    ls '$JOBS'/*
+else
+    echo -e '\nNo jobs found, shutting down backup server...'
+    shutdown -p now
+fi"
 
 echo -e "\nFinished at:  $(_time)"
