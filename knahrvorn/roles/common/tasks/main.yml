@@ -57,7 +57,7 @@
     - redis-tools
     - certbot
     - python3-certbot-dns-cloudflare
-    - coturn
+#    - coturn
     - nfs-common
     - vim
     - aha

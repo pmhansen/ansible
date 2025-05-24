@@ -96,11 +96,11 @@
     dest: /etc/mysql/conf.d/nextcloud.cnf
     mode: 0644
 
-- name: Making cuTURN configuration
-  template:
-    src: "etc/turnserver.conf.j2"
-    dest: "/etc/turnserver.conf"
-    mode: 0644
+# - name: Making cuTURN configuration
+#   template:
+#     src: "etc/turnserver.conf.j2"
+#     dest: "/etc/turnserver.conf"
+#     mode: 0644
 
 - name: Setting up Nextcloud background job
   cron:
