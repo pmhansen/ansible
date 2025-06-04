@@ -45,11 +45,71 @@
     - { name: /export/volumes/nomad/flexsignal, owner: nobody, group: docker }
     - { name: /export/volumes/nomad/flexsignal-mqtt-samples, owner: nobody, group: docker }
 
+- name: Create consul directories
+  file:
+    path: "/etc/consul.d/{{ item.name }}"
+    state: directory
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+    mode: "0775"
+  loop:
+    - { name: scripts, owner: consul, group: consul }
+    - { name: services, owner: consul, group: consul }
+    - { name: templates, owner: consul, group: consul }
+
 - name: Making Consul configuration
   template:
     src: "etc/consul.d/consul.hcl.j2"
     dest: "/etc/consul.d/consul.hcl"
     mode: 0644
+
+- name: Ensure systemd override dir
+  file:
+    path: /etc/systemd/system/consul.service.d/
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Copy systemd override file
+  copy:
+    dest: /etc/systemd/system/consul.service.d/override.conf
+    content: |
+      [Service]
+      # Clear current value, otherwise systemd will yell
+      ExecStart=
+
+      # New values
+      ExecStart=/usr/bin/consul agent -config-dir=/etc/consul.d/ -config-dir=/etc/consul.d/services/    
+    mode: 0644
+
+- name: Copy update-pg-role script
+  template:
+    src: etc/consul.d/scripts/update-pg-role.sh
+    dest: /etc/consul.d/scripts/update-pg-role.sh
+    mode: 0755
+    owner: consul
+    group: consul
+
+- name: Copy pg-master templates
+  template:
+    src: etc/consul.d/templates/pg-master.tmpl
+    dest: /etc/consul.d/templates/pg-master-{{ item.name }}.tmpl
+    owner: consul
+    group: consul
+  vars:
+    rand_suffix: "{{ lookup('password', '/dev/null length=15 chars=ascii_lowercase,digits') }}"
+  loop: "{{ postgres.clusters }}"
+
+- name: Copy pg-slave templates
+  template:
+    src: etc/consul.d/templates/pg-slave.tmpl
+    dest: /etc/consul.d/templates/pg-slave-{{ item.name }}.tmpl
+    owner: consul
+    group: consul
+  vars:
+    rand_suffix: "{{ lookup('password', '/dev/null length=15 chars=ascii_lowercase,digits') }}"
+  loop: "{{ postgres.clusters }}"
 
 - name: Making Nomad configuration
   template:
@@ -68,6 +128,7 @@
     name: consul
     state: started
     enabled: true
+    daemon_reload: true
 
 - name: Start Nomad service
   systemd_service:
@@ -88,10 +149,51 @@
 
 - name: Making systemd-resolved configuration
   copy:
-    src: etc/systemd/resolved.conf.d/consul.conf
     dest: /etc/systemd/resolved.conf.d/consul.conf
+    content: |
+      [Resolve]
+      DNS=127.0.0.1:8600
+      DNSSEC=false
+      Domains=node.consul service.consul ~consul
+      DNSStubListener=yes
+      DNSStubListenerExtra=172.17.0.1
+
 
 - name: Restart systemd-resolved service
   systemd_service:
     name: systemd-resolved
     state: restarted
+
+- name: Create systemd update-pg-role timer
+  copy:
+    dest: "/etc/systemd/system/update-pg-role.service"
+    content: |
+      [Unit]
+      Description=Update Postgres role in Consul
+
+      [Service]
+      Type=oneshot
+      User=consul
+      ExecStart=/etc/consul.d/scripts/update-pg-role.sh
+
+- name: Create systemd timer unit
+  copy:
+    dest: "/etc/systemd/system/update-pg-role.timer"
+    content: |
+      [Unit]
+      Description=Run update-pg-role.sh every minute
+
+      [Timer]
+      OnBootSec=1min
+      OnUnitActiveSec=1min
+      Persistent=true
+
+      [Install]
+      WantedBy=timers.target
+
+- name: Enable and start the timer
+  systemd:
+    name: "update-pg-role.timer"
+    enabled: true
+    state: started
+    daemon_reload: true

@@ -1,0 +1,15 @@
+services = [
+  {
+    name = "pg-master"
+    id   = "pg-master-{{ item.name }}-{{ rand_suffix }}"
+    tags = ["{{ item.name }}"]
+    port = {{ item.port }}
+
+    check = {
+      name     = "PostgreSQL Master Check"
+      args     = ["bash", "-c", "PGUSER={{ postgres.user }} PGPASSWORD={{ postgres.pass}} psql -h knahrvorn-eno1 -p {{ item.port }} -tAc \"SELECT NOT pg_is_in_recovery();\" | grep -q t"]
+      interval = "10s"
+      timeout  = "2s"
+    }
+  }
+]

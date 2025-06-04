@@ -70,6 +70,7 @@
     - libvirt-daemon-system 
     - virtinst
     - qemu-utils
+    - postgresql-common
 
 - name: Copy unattended-upgrades configuration
   copy:
@@ -281,3 +282,13 @@
     name: pmh
     groups: libvirt,kvm
     append: yes
+
+- name: Setup Postgres repository
+  shell: |
+    echo | sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh
+
+- name: Install Postgres client
+  apt:
+    name: postgresql-client-17
+    state: present
+    update_cache: yes
