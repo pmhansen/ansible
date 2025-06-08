@@ -57,7 +57,6 @@
     - redis-tools
     - certbot
     - python3-certbot-dns-cloudflare
-#    - coturn
     - nfs-common
     - vim
     - aha
@@ -71,6 +70,8 @@
     - virtinst
     - qemu-utils
     - postgresql-common
+    - cloud-image-utils
+    - cloud-init
 
 - name: Copy unattended-upgrades configuration
   copy:
@@ -269,8 +270,8 @@
     group: "{{ item.group }}"
     mode: "0775"
   loop:
-    - { name: /mnt/nas1/volumes/libvirt/images, owner: libvirt-qemu, group: kvm }
-    - { name: /mnt/nas1/volumes/libvirt/iso, owner: libvirt-qemu, group: kvm }
+    - { name: /export/volumes/libvirt/images, owner: libvirt-qemu, group: kvm }
+    - { name: /export/volumes/libvirt/iso, owner: libvirt-qemu, group: kvm }
 
 - name: Ensure the libvirt-qemu.d directory exists
   file:
@@ -281,7 +282,7 @@
 - name: Add override rule for NAS volume access
   lineinfile:
     path: /etc/apparmor.d/abstractions/libvirt-qemu.d/override
-    line: "/mnt/nas1/volumes/libvirt/images/** rwk,"
+    line: "/export/volumes/libvirt/images/** rwk,"
     create: yes
     state: present
     insertafter: EOF
