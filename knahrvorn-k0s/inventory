@@ -1,0 +1,11 @@
+[k0s-cluster]
+knahrvorn-k0s-001
+knahrvorn-k0s-002
+knahrvorn-k0s-003
+
+[k0s-controller]
+knahrvorn-k0s-001
+
+[k0s-worker]
+knahrvorn-k0s-002
+knahrvorn-k0s-003
