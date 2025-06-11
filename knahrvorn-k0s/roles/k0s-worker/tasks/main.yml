@@ -1,0 +1,11 @@
+- name: Copy token to worker
+  copy:
+    src: ./token.txt
+    dest: /tmp/token.txt
+    mode: '0600'
+
+- name: Install k0s worker using token
+  shell: k0s install worker --token-file /tmp/token.txt
+
+- name: Start k0s worker
+  shell: k0s start
