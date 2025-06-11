@@ -1,0 +1,4 @@
+- name: Download and install k0s
+  shell: curl -sSLf https://get.k0s.sh | sh
+  args:
+    executable: /bin/bash

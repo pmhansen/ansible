@@ -1,0 +1,3 @@
+mydomain = k0snet.local
+mydestination = $myhostname, localhost.$mydomain, localhost
+relayhost = consul.service.consul

@@ -1,0 +1,20 @@
+- name: Copy Postfix configuration
+  copy:
+    src: etc/postfix/main.cf
+    dest: /etc/postfix/main.cf
+  register: postfix_conf
+
+- name: Reload Postfix service
+  service:
+    name: postfix
+    state: reloaded
+  when: > 
+    postfix_conf.changed
+
+- name: Copy unattended-upgrade setup
+  copy:
+    src: etc/apt/apt.conf.d/{{ item }}
+    dest: /etc/apt/apt.conf.d/{{ item }}
+  loop:
+    - 10periodic
+    - 50unattended-upgrades

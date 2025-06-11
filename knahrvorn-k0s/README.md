@@ -1,5 +1,6 @@
 # Run the playbook
 ansible-playbook playbook.yml -i inventory
+ansible-playbook playbook.yml -i inventory --tags common,k0s
 
 #### Check nodes
 ```

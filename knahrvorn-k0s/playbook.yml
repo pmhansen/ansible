@@ -1,55 +1,45 @@
-- name: Install k0s binary
-  hosts: k0s-cluster
-  become: yes
+- hosts: k0s-cluster
+  name: Run common tasks
+  become: true
+  tags:
+    common
   tasks:
-    - name: Download and install k0s
-      shell: curl -sSLf https://get.k0s.sh | sh
-      args:
-        executable: /bin/bash
+    - import_role:
+        name: common
 
-- name: Set up controller
-  hosts: k0s-controller
-  become: yes
+- hosts: k0s-cluster
+  gather_facts: false
+  name: Setup k0s cluster
+  become: true
+  tags:
+    k0s
   tasks:
-    - name: Install k0s controller with worker role
-      shell: k0s install controller --enable-worker
+    - name: Check if k0s is already installed
+      stat:
+        path: /usr/local/bin/k0s
+      register: k0s
+    - import_role:
+        name: k0s
+      when: not k0s.stat.exists
 
-    - name: Start k0s controller
-      shell: k0s start
-
-    - name: Wait for k0s to start
-      wait_for:
-        port: 9443
-        delay: 5
-        timeout: 60
-
-    - name: Generate worker join token
-      command: k0s token create --role=worker
-      register: worker_token
-
-    - name: Save token to a file
-      copy:
-        dest: /tmp/token.txt
-        content: "{{ worker_token.stdout }}"
-
-    - name: Fetch token.txt
-      fetch:
-        src: /tmp/token.txt
-        dest: ./token.txt
-        flat: yes
-
-- name: Distribute token and install workers
-  hosts: k0s-worker
-  become: yes
+- hosts: k0s-controller
+  gather_facts: false
+  name: Setup k0s controller
+  become: true
+  tags:
+    k0s-controller
   tasks:
-    - name: Copy token to worker
-      copy:
-        src: ./token.txt
-        dest: /tmp/token.txt
-        mode: '0600'
-
-    - name: Install k0s worker using token
-      shell: k0s install worker --token-file /tmp/token.txt
-
-    - name: Start k0s worker
-      shell: k0s start
+    - import_role:
+        name: k0s-controller
+      when: not k0s.stat.exists
+  
+- hosts: k0s-worker
+  gather_facts: false
+  name: Setup k0s worker
+  become: true
+  tags:
+    k0s-worker
+  tasks:
+    - import_role:
+        name: k0s-worker
+      when: not k0s.stat.exists
