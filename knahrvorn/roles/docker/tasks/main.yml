@@ -47,7 +47,7 @@
     state: restarted
   when: docker_result.changed
 
-- name: Create directories for docker volumes
+- name: Create directories for docker volumes in /export/volumes/docker
   file:
     path: "/export/volumes/docker/{{ item.path }}"
     state: directory
@@ -63,11 +63,20 @@
       group: www-data
       mode: '0700'
     - path: dstar4all/html
+    - path: vaultwarden
+    - path: ntfy
+
+- name: Create directories for docker volumes in /mnt/nas1/volumes/docker
+  file:
+    path: "/mnt/nas1/volumes/docker/{{ item.path }}"
+    state: directory
+    owner: "{{ item.owner | default('root') }}"
+    group: "{{ item.group | default('docker') }}"
+    mode: "{{ item.mode | default('42775') }}"
+  loop:
     - path: registry/auth
     - path: registry/certs
     - path: registry/data
-    - path: vaultwarden
-    - path: ntfy
 
 - name: Ensure folders for docker compose scripts
   file:

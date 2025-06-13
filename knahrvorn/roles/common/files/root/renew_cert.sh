@@ -33,8 +33,8 @@ certbot certonly --standalone --agree-tos --expand \
 
 cat /etc/letsencrypt/live/flexdevel.com/privkey.pem > /etc/letsencrypt/live/flexdevel.com/flexdevel.pem
 cat /etc/letsencrypt/live/flexdevel.com/fullchain.pem >> /etc/letsencrypt/live/flexdevel.com/flexdevel.pem
-cat /etc/letsencrypt/live/flexdevel.com/privkey.pem > /export/volumes/docker/registry/certs/flexdevel.key.pem
-cat /etc/letsencrypt/live/flexdevel.com/fullchain.pem > /export/volumes/docker/registry/certs/flexdevel.crt.pem
+cat /etc/letsencrypt/live/flexdevel.com/privkey.pem > /mnt/nas1/volumes/docker/registry/certs/flexdevel.key.pem
+cat /etc/letsencrypt/live/flexdevel.com/fullchain.pem > /mnt/nas1/volumes/docker/registry/certs/flexdevel.crt.pem
 cat /etc/letsencrypt/live/knahrvorn.pbnet.dk/privkey.pem > /etc/letsencrypt/live/knahrvorn.pbnet.dk/knahrvorn.pem
 cat /etc/letsencrypt/live/knahrvorn.pbnet.dk/fullchain.pem >> /etc/letsencrypt/live/knahrvorn.pbnet.dk/knahrvorn.pem
 
