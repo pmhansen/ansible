@@ -13,7 +13,6 @@ SyslogIdentifier=tiddlywiki
 Restart=always
 User=nobody
 Group=nogroup
-StandardOutput=syslog
 EnvironmentFile=/etc/tiddlywiki.conf
 ExecStart=/usr/local/bin/tiddlywiki $WIKI --listen port=${PORT} \
     host=${HOST} \
