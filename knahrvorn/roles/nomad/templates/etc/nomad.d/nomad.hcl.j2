@@ -51,8 +51,8 @@ client {
   // Only do GC every 3 days
   gc_interval = "72h"
 
-  // Each client can have a max of 20 dead allocations, before they are cleaned up.
-  gc_max_allocs = "20"
+  // Each client can have a max of 50 dead allocations, before they are cleaned up.
+  gc_max_allocs = "50"
 
   host_volume "docker-socket" {
     path = "/var/run/docker.sock"
