@@ -28,7 +28,6 @@
     mode: "42775"
   loop:
     - { name: /export/volumes/nomad/dragonfly, owner: root, group: docker }
-    - { name: /export/volumes/nomad/mosquitto, owner: root, group: docker }
     - { name: /export/volumes/nomad/grafana, owner: 472, group: docker }
     - { name: /export/volumes/nomad/loki, owner: 10001, group: 10001 }
     - { name: /export/volumes/nomad/pgdata/api, owner: root, group: docker }
@@ -39,11 +38,9 @@
     - { name: /export/volumes/nomad/pgdata/storage, owner: root, group: docker }
     - { name: /export/volumes/nomad/pgdata/techlog, owner: root, group: docker }
     - { name: /export/volumes/nomad/prometheus, owner: root, group: docker }
-    - { name: /export/volumes/nomad/rabbitmq, owner: root, group: docker }
     - { name: /mnt/nas1/volumes/nomad/nominatim, owner: root, group: docker }
     - { name: /export/volumes/nomad/birth, owner: nobody, group: docker }
     - { name: /export/volumes/nomad/flexsignal, owner: nobody, group: docker }
-    - { name: /export/volumes/nomad/flexsignal-mqtt-samples, owner: nobody, group: docker }
 
 - name: Create consul directories
   file:

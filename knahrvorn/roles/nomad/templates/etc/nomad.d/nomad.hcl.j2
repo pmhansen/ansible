@@ -74,18 +74,8 @@ client {
     read_only = false
   }
 
-  host_volume "flexsignal-mqtt-samples" {
-    path      = "/export/volumes/nomad/flexsignal-mqtt-samples"
-    read_only = false
-  }
-
   host_volume "grafana" {
     path      = "/export/volumes/nomad/grafana"
-    read_only = false
-  }
-
-  host_volume "mosquitto" {
-    path      = "/export/volumes/nomad/mosquitto"
     read_only = false
   }
 
@@ -131,11 +121,6 @@ client {
 
   host_volume "prometheus" {
     path      = "/export/volumes/nomad/prometheus"
-    read_only = false
-  }
-
-  host_volume "rabbitmq" {
-    path      = "/export/volumes/nomad/rabbitmq"
     read_only = false
   }
   
