@@ -16,6 +16,12 @@
     dest: "/etc/network/interfaces.d/eno1_alias_1"
     mode: 0644
 
+- name: Copy network network interface file for monitoring
+  template:
+    src: "etc/network/interfaces.d/eno2"
+    dest: "/etc/network/interfaces.d/eno2"
+    mode: 0644
+
 - name: Ensure hosts file entries
   blockinfile:
     path: /etc/hosts

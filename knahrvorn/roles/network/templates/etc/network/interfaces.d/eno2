@@ -1,0 +1,4 @@
+allow-hotplug eno2
+iface eno2 inet manual
+    up ip link set eno2 up
+    down ip link set eno2 down
