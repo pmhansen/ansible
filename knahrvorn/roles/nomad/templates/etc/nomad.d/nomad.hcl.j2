@@ -123,7 +123,12 @@ client {
     path      = "/export/volumes/nomad/prometheus"
     read_only = false
   }
-  
+
+  host_volume "zeek" {
+    path      = "/mnt/nas1/volumes/nomad/zeek"
+    read_only = false
+  }
+
   options {
         "docker.cleanup.image" = "false"
   }
