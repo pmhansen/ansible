@@ -95,9 +95,9 @@ sudo -S -E ssh {{ scripts.backup_user }} -p 22 "zfs list -t snapshot -o name -s 
 
 sudo -S -E ssh {{ scripts.backup_user }} -p 22 "zpool status"
 
-# Shutdown backup server
 sudo -S -E ssh {{ scripts.backup_user }} -p 22 "shutdown -p now"
 
+# Shutdown backup server
 sudo -S -E ssh {{ scripts.backup_user }} -p 22 "
 rm -f '$JOBS/$(basename $0)'
 if ls '$JOBS'/* >/dev/null 2>&1; then
