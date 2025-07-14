@@ -19,7 +19,7 @@ services:
       - redeem
 
   email:
-    image: hub.flexdevel.com:5000/flexsignal_email
+    image: hub.flexdevel.com:5000/flexsignal_email:${EMAIL_IMAGE_TAG:-latest}
     container_name: redeem_flexsignal_email
     environment:
       API_ADDR: 0.0.0.0:13001
@@ -43,7 +43,7 @@ services:
       - redeem
 
   payment:
-    image: hub.flexdevel.com:5000/flexsignal_payment
+    image: hub.flexdevel.com:5000/flexsignal_payment:${PAYMENT_IMAGE_TAG:-latest}
     container_name: redeem_flexsignal_payment
     environment:
       RPC_ADDR: 0.0.0.0:19094
@@ -93,7 +93,7 @@ services:
       - redeem
 
   web:
-    image: hub.flexdevel.com:5000/redeem:${REDEEM_IMAGE_TAG}
+    image: hub.flexdevel.com:5000/redeem:${REDEEM_IMAGE_TAG:-latest}
     user: "www-data:www-data"
     container_name: redeem_web
     environment:

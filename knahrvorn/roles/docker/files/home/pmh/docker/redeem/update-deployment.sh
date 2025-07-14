@@ -35,5 +35,22 @@ _check_env SMTP_PORT
 _check_env SMTP_USERNAME
 _check_env SMTP_PASSWORD
 
+: '
+Read optional docker image tags from file image-tags.txt.
+example:
+EMAIL_IMAGE_TAG=20250714131437
+PAYMENT_IMAGE_TAG=20250714131437
+REDEEM_IMAGE_TAG=latest
+
+latest is default, so the REDEEM_IMAGE_TAG=latest line is not needed.
+'
+
+if [ -f "image-tags.txt" ];
+then
+  set -a
+  source image-tags.txt
+  set +a
+fi
+
 docker compose pull
 docker compose down && docker compose up -d
