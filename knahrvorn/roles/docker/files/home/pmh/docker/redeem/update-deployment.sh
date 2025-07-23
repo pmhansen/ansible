@@ -34,6 +34,7 @@ _check_env SMTP_SERVER
 _check_env SMTP_PORT
 _check_env SMTP_USERNAME
 _check_env SMTP_PASSWORD
+_check_env SMTP_SUPPORT_EMAIL
 
 : '
 Read optional docker image tags from file image-tags.txt.

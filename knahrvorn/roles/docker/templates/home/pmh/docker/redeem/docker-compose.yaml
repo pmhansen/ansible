@@ -113,6 +113,7 @@ services:
       SMTP_FROM_ADDRESS: support@itservices.nu
       SMTP_FROM_NAME: IT Services
       SMTP_REPLYTO: support@itservices.nu
+      SMTP_SUPPORT_EMAIL: ${SMTP_SUPPORT_EMAIL}
       SITE_URL: ${SITE_URL}
       CARE1_API: ${CARE1_API}
       CARE1_USERNAME: ${CARE1_USERNAME}
