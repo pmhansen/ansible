@@ -7,13 +7,13 @@ _time () {
 }
 
 rsync_wrapper () {
-    rsync "$@"
+    sudo -S -E rsync "$@"
     local exit_code=$?
     # Partial transfer due to vanished source files
-    if [ $exit_code eq 24 ]; then
+    if [ "$exit_code" -eq 24 ]; then
         return 0
     else
-        return $exit_code
+        return "$exit_code"
     fi
 }
 
@@ -51,49 +51,49 @@ sudo -S -E ssh {{ scripts.backup_user }} -p 22 "mkdir -p $JOBS; touch $JOBS/$(ba
 echo -e "\n\nMySQL backup $(_time) ..."
 sudo mkdir -p /usr/local/mysqlbackup
 sudo mysqldump -u root nextcloud |sudo tee /usr/local/mysqlbackup/nextcloud.sql >/dev/null
-sudo -S -E rsync_wrapper -av --delete --numeric-ids -e "ssh" "/usr/local/mysqlbackup" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
+rsync_wrapper -av --delete --numeric-ids -e "ssh" "/usr/local/mysqlbackup" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
 
 echo -e "\nanime backup $(_time) ..."
-sudo -S -E rsync_wrapper -av --delete --numeric-ids -e "ssh" "/mnt/nas1/plex/anime" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
+rsync_wrapper -av --delete --numeric-ids -e "ssh" "/mnt/nas1/plex/anime" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
 
 echo -e "\ncamera backup $(_time) ..."
-sudo -S -E rsync_wrapper -av --delete --numeric-ids -e "ssh" "/mnt/nas1/plex/camera" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
+rsync_wrapper -av --delete --numeric-ids -e "ssh" "/mnt/nas1/plex/camera" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
 
 echo -e "\nchildren backup $(_time) ..."
-sudo -S -E rsync_wrapper -av --delete --numeric-ids -e "ssh" "/mnt/nas1/plex/children" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
+rsync_wrapper -av --delete --numeric-ids -e "ssh" "/mnt/nas1/plex/children" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
 
 echo -e "\ndocumentaries backup $(_time) ..."
-sudo -S -E rsync_wrapper -av --delete --numeric-ids -e "ssh" "/mnt/nas1/plex/documentaries" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
+rsync_wrapper -av --delete --numeric-ids -e "ssh" "/mnt/nas1/plex/documentaries" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
 
 echo -e "\netc backup $(_time) ..."
-sudo -S -E rsync_wrapper -av --delete --numeric-ids -e "ssh" "/etc" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
+rsync_wrapper -av --delete --numeric-ids -e "ssh" "/etc" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
 
 echo -e "\nexport backup $(_time) ..."
-sudo -S -E rsync_wrapper -a --delete --numeric-ids -e "ssh" "/export" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
+rsync_wrapper -a --delete --numeric-ids -e "ssh" "/export" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
 
 echo -e "\nhome backup $(_time) ..."
-sudo -S -E rsync_wrapper -av --delete --numeric-ids -e "ssh" "/home" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
+rsync_wrapper -av --delete --numeric-ids -e "ssh" "/home" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
 
 echo -e "\nmovies backup $(_time) ..."
-sudo -S -E rsync_wrapper -av --delete --numeric-ids -e "ssh" "/mnt/nas1/plex/movies" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
+rsync_wrapper -av --delete --numeric-ids -e "ssh" "/mnt/nas1/plex/movies" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
 
 echo -e "\nmusic backup $(_time) ..."
-sudo -S -E rsync_wrapper -av --delete --numeric-ids -e "ssh" "/mnt/nas1/plex/music" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
+rsync_wrapper -av --delete --numeric-ids -e "ssh" "/mnt/nas1/plex/music" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
 
 echo -e "\nplexmediaserver backup $(_time) ..."
 sudo -S -E ssh {{ scripts.backup_user }} -p 22 "mkdir -p /mnt/tank/knahrvorn/plexmediaserver"
-sudo -S -E rsync_wrapper -a --delete --numeric-ids -e "ssh" "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/" \
+rsync_wrapper -a --delete --numeric-ids -e "ssh" "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/" \
     "{{ scripts.backup_user }}:/mnt/tank/knahrvorn/plexmediaserver"
 
 echo -e "\nnas1 backup $(_time) ..."
-sudo -S -E rsync_wrapper -a --delete --numeric-ids --exclude=plex --exclude=tmp --exclude=volumes \
+rsync_wrapper -a --delete --numeric-ids --exclude=plex --exclude=tmp --exclude=volumes \
     -e "ssh" "/mnt/nas1" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
 
 echo -e "\nseries backup $(_time) ..."
-sudo -S -E rsync_wrapper -av --delete --numeric-ids -e "ssh" "/mnt/nas1/plex/series" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
+rsync_wrapper -av --delete --numeric-ids -e "ssh" "/mnt/nas1/plex/series" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
 
 echo -e "\nwww backup $(_time) "
-sudo -S -E rsync_wrapper -av --delete --numeric-ids -e "ssh" "/var/www" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
+rsync_wrapper -av --delete --numeric-ids -e "ssh" "/var/www" "{{ scripts.backup_user }}:/mnt/tank/knahrvorn"
 
 snapshot=tank/knahrvorn@$(date +\%Y-\%m-\%d)
 echo -e "\nCreate ZFS snapshot $snapshot"
