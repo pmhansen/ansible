@@ -1,1 +1,2 @@
+[smtp.luop.dk]:587 keoa@mail1.pbnet.dk:{{ postfix.hermes }}
 [smtp.office365.com]:587 support@itservices.nu:{{ postfix.itservices }}
