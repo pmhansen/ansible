@@ -31,7 +31,7 @@ services:
       SMTP_PORT: ${SMTP_PORT}
       SMTP_USERNAME: ${SMTP_USERNAME}
       SMTP_PASSWORD: ${SMTP_PASSWORD}
-      DEFAULT_SENDER: support@itservices.nu
+      DEFAULT_SENDER: mail@mail.itservices.nu
       DEFAULT_SENDER_NAME: IT Services
       VERBOSE: ${VERBOSE}
     restart: always
@@ -54,7 +54,7 @@ services:
       SRV_REDIS_NAME: ""
       REDIS_URL: redis://redis:6379/0
       EMAIL_SENDER_NAME: IT Services
-      EMAIL_SENDER: support@itservices.nu
+      EMAIL_SENDER: mail@mail.itservices.nu
       FREEPAY_API_KEY: ${FREEPAY_API_KEY}
       FREEPAY_API_KEY_NOK: ${FREEPAY_API_KEY_NOK}
       FREEPAY_API_KEY_SEK: ${FREEPAY_API_KEY_SEK}
@@ -110,7 +110,7 @@ services:
       SMTP_PORT: ${SMTP_PORT}
       SMTP_USERNAME: ${SMTP_USERNAME}
       SMTP_PASSWORD: ${SMTP_PASSWORD}
-      SMTP_FROM_ADDRESS: support@itservices.nu
+      SMTP_FROM_ADDRESS: mail@mail.itservices.nu
       SMTP_FROM_NAME: IT Services
       SMTP_REPLYTO: support@itservices.nu
       SMTP_SUPPORT_EMAIL: ${SMTP_SUPPORT_EMAIL}
