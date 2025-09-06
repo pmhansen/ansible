@@ -1,0 +1,7 @@
+services:
+  registry:
+    restart: always
+    image: ghcr.io/gchq/cyberchef:latest
+    container_name: cyberchef
+    ports:
+      - 3013:80

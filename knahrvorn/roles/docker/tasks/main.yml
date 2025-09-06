@@ -78,6 +78,18 @@
     - path: registry/certs
     - path: registry/data
 
+- name: Define docker services list
+  set_fact:
+    docker_services:
+      - orderbridge
+      - redeem
+      - dstar4all
+      - registry
+      - vaultwarden
+      - collabora
+      - ntfy
+      - cyberchef
+
 - name: Ensure folders for docker compose scripts
   file:
     path: /home/pmh/docker/{{ item }}
@@ -85,14 +97,7 @@
     owner: pmh
     group: pmh
   loop:
-    - orderbridge
-    - redeem
-    - redeem/database
-    - dstar4all
-    - registry
-    - vaultwarden
-    - collabora
-    - ntfy
+    "{{ docker_services + ['redeem/database'] }}"
 
 - name: YAML files
   template:
@@ -102,13 +107,7 @@
     group: pmh
     mode: 0644
   loop:
-    - orderbridge
-    - redeem
-    - dstar4all
-    - registry
-    - vaultwarden
-    - collabora
-    - ntfy
+    "{{ docker_services }}"
 
 - name: Docker compose scripts
   copy: 
@@ -118,13 +117,7 @@
     group: pmh
     mode: 0750
   loop:
-    - orderbridge
-    - redeem
-    - dstar4all
-    - registry
-    - vaultwarden
-    - collabora
-    - ntfy
+    "{{ docker_services }}"
 
 - name: Set sysctl kernel parameter
   sysctl:
