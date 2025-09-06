@@ -3,5 +3,7 @@ services:
     restart: always
     image: ghcr.io/gchq/cyberchef:latest
     container_name: cyberchef
+    volumes:
+      - /mnt/nas1/volumes/docker/cyberchef/default.conf:/etc/nginx/conf.d/default.conf:ro
     ports:
       - 3013:80

@@ -74,9 +74,16 @@
     group: "{{ item.group | default('docker') }}"
     mode: "{{ item.mode | default('42775') }}"
   loop:
+    - path: cyberchef
     - path: registry/auth
     - path: registry/certs
     - path: registry/data
+
+- name: Copy Cyberchef Nginx configuration
+  copy:
+    src: mnt/nas1/volumes/docker/cyberchef/default.conf
+    dest: /mnt/nas1/volumes/docker/cyberchef/default.conf
+    group: docker
 
 - name: Define docker services list
   set_fact:
