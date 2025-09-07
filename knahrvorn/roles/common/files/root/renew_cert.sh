@@ -29,7 +29,8 @@ certbot certonly --standalone --agree-tos --expand \
         -d vault.pbnet.dk \
         -d grafana.pbnet.dk \
         -d prometheus.pbnet.dk \
-        -d signaling.pbnet.dk
+        -d signaling.pbnet.dk \
+        -d cyberchef.pbnet.dk
 
 cat /etc/letsencrypt/live/flexdevel.com/privkey.pem > /etc/letsencrypt/live/flexdevel.com/flexdevel.pem
 cat /etc/letsencrypt/live/flexdevel.com/fullchain.pem >> /etc/letsencrypt/live/flexdevel.com/flexdevel.pem
