@@ -106,7 +106,12 @@ client {
     path      = "/export/volumes/nomad/pgdata/api"
     read_only = false
   }
-  
+
+  host_volume "pgdata-email" {
+    path      = "/export/volumes/nomad/pgdata/email"
+    read_only = false
+  }
+
   host_volume "pgdata-event" {
     path      = "/export/volumes/nomad/pgdata/event"
     read_only = false

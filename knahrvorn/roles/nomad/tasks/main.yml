@@ -31,6 +31,7 @@
     - { name: /export/volumes/nomad/grafana, owner: 472, group: docker }
     - { name: /export/volumes/nomad/loki, owner: 10001, group: 10001 }
     - { name: /export/volumes/nomad/pgdata/api, owner: root, group: docker }
+    - { name: /export/volumes/nomad/pgdata/email, owner: root, group: docker }
     - { name: /export/volumes/nomad/pgdata/event, owner: root, group: docker }
     - { name: /export/volumes/nomad/pgdata/nominatim, owner: root, group: docker }
     - { name: /export/volumes/nomad/pgdata/payment, owner: root, group: docker }
